@@ -1,0 +1,16 @@
+version: '3'
+services: #Different containers
+  web: #NodeJS app
+    build: . # Dockerfile is in local repo
+    ports:
+      - "8080:8080"
+  db:
+    image: "mysql"
+    environment: 
+      MYSQL_ROOT_PASSWORD: password
+    volumes:
+      - db-data:/foo
+
+volumes:
+  db-data:
+
