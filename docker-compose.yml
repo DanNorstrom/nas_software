@@ -1,16 +1,50 @@
 version: '3'
 services: #Different containers
-  web: #NodeJS app
-    build: . # Dockerfile is in local repo
+
+  server: #Node server
+    build: ./server
+
+    # command overrides standard to use nodemon during DEV
+    command: nodemon server.js
     ports:
       - "8080:8080"
-  db:
-    image: "mysql"
-    environment: 
-      MYSQL_ROOT_PASSWORD: password
+    networks:
+      - app-network
     volumes:
-      - db-data:/foo
+      - ./server/:/usr/src/app
+      - /usr/src/app/node_modules
 
+  client: #React app
+    build: ./client
+    ports:
+      - "3000:3000"
+    networks:
+      - app-network
+    volumes:
+      - ./client/:/usr/app
+      - /usr/app/node_modules
+    depends_on:
+      - server
+
+  # mongo: #mongoDB mongoose
+    # image: mongo
+    # volumes:
+    #   - data-volume:/data/db
+    # ports:
+    #   - "27017:27017"
+    # networks:
+    #   - app-network
+
+
+# isloate containers to only communicate with containers on the same network
+networks:
+  app-network:
+    driver: bridge
+
+# allows containers to share data with other containers
 volumes:
-  db-data:
+  data-volume:
+  node_modules:
+  web-root:
+    driver: local
 
