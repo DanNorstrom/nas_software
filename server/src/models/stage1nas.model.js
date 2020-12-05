@@ -71,7 +71,7 @@ const postSchema = new mongoose.Schema({
 });
 
 // create the schema
-// 1: "Post" is the name of the collection that will contain the documents
+// 1: "stage1" is the name of the collection that will contain the documents
 // 2: second is the schema name/type
 const STAGE_1 = mongoose.model("stage1", postSchema);
 
