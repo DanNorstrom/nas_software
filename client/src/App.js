@@ -6,6 +6,7 @@ import './App.css';
 import Navbar from "./components/navigationBar";
 import NAS_STAGE_1 from "./components/NAS_Stage_1"
 import NAS_STAGE_2 from "./components/NAS_Stage_2"
+import ReportDashboard from "./components/ReportDashboard"
 
 import { BrowserRouter,Switch,Route } from "react-router-dom";
 
@@ -28,9 +29,15 @@ function App() {
     <Route exact path="/">
       <NAS_STAGE_1 />
     </Route>
+
     <Route path="/NasStage2">
     <NAS_STAGE_2 />
     </Route>
+
+    <Route path="/ReportDashboard">
+    <ReportDashboard />
+    </Route>
+
   </Switch>
 </div>
 </BrowserRouter>
