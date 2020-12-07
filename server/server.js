@@ -17,13 +17,12 @@ const postRouter = require('./src/routes/post.router');
 // Our DB Configuration
 require('./src/database');
 
-
+// readable formats
 app.use(
   bodyParser.urlencoded({
     extended: true
   })
 );
-
 app.use(bodyParser.json());
 
 // Static files

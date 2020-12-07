@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 
 
-    //#"react": "^17.0.1",
-    //"react-dom": "^17.0.1",
 
+// take nas stage 1 input from nurses once per patient per shift.
+// and save to stage1 collection
 function NAS_STAGE_1() {
 
   const [state, setState] = React.useState({ 
@@ -75,7 +75,6 @@ function NAS_STAGE_1() {
 
       console.log(state)
     }
-
 
     return (
       <div className="app" >

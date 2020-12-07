@@ -1,7 +1,7 @@
 const express = require('express');
 const postRouter = express.Router();
 const STAGE_1 = require('../models/stage1nas.model');
-
+const STAGE_2 = require('../models/stage2nas.model');
 /* ### NOTES ###
 app = express.Router()
 app.METHOD(PATH, HANDLER)
@@ -50,7 +50,7 @@ postRouter.get("/:post_id", (req, res, next) => {
 /* Add Single Post to stage1 DB*/
 postRouter.post("/stage1/", (req, res, next) => {
 
-  console.log("WE ARE TRYING TO POST FROM CLIENT");
+  console.log("WE ARE TRYING TO POST TO STAGE1 FROM CLIENT");
 
   let newPost = { 
     PATIENT_ID: req.body.PATIENT_ID,
@@ -94,6 +94,32 @@ postRouter.post("/stage1/", (req, res, next) => {
     BA23: req.body.BA23
   };
    STAGE_1.create(newPost, function(err, result) {
+    if(err){
+        res.status(400).send({
+          success: false,
+          error: err.message,
+          message: "post wasnt created"
+        });
+    }
+      res.status(201).send({
+        success: true,
+        data: result,
+        message: "Post created successfully"
+      });
+  });
+});
+
+/* Add Single Post to stage2 DB*/
+postRouter.post("/stage2/", (req, res, next) => {
+
+  console.log("WE ARE TRYING TO POST TO STAGE2 FROM CLIENT");
+
+  let newPost = { 
+    PERSONNEL_COUNT: req.body.PERSONNEL_COUNT,
+    DATE: req.body.DATE
+
+  };
+   STAGE_2.create(newPost, function(err, result) {
     if(err){
         res.status(400).send({
           success: false,
