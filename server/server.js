@@ -17,7 +17,6 @@ const postRouter = require('./src/routes/post.router');
 // Our DB Configuration
 require('./src/database');
 
-const CLIENT_BUILD_PATH = path.join(__dirname, "../client/build");
 
 app.use(
   bodyParser.urlencoded({
@@ -28,6 +27,7 @@ app.use(
 app.use(bodyParser.json());
 
 // Static files
+const CLIENT_BUILD_PATH = path.join(__dirname, "../client/build");
 app.use(express.static(CLIENT_BUILD_PATH));
 
 app.use('/posts', postRouter);

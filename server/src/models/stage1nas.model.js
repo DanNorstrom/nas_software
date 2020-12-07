@@ -25,8 +25,14 @@ const postSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    TIME_IN: Date,
-    TIME_OUT: Date,
+    TIME_IN: {
+        type: String,
+        required: true
+    },
+    TIME_OUT: {
+        type: String,
+        required: true
+    },
     DATE: {
         type: Date,
         required: true

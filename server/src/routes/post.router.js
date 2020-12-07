@@ -47,8 +47,8 @@ postRouter.get("/:post_id", (req, res, next) => {
 
 // req.body holds parameters that are sent up from the client as part of a POST request
 // let is only available in current block scope { }.
-/* Add Single Post */
-postRouter.post("/", (req, res, next) => {
+/* Add Single Post to stage1 DB*/
+postRouter.post("/stage1/", (req, res, next) => {
 
   console.log("WE ARE TRYING TO POST FROM CLIENT");
 
