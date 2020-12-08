@@ -274,6 +274,25 @@
 }
 
 
+.grid-MainReportDashboard{
+  display: grid;
+  margin-left: auto;
+  margin-right: auto;
+
+  width: 90%;
+  margin-bottom: 5px;
+  padding-top: 25px;
+  padding-bottom: 25px;
+  min-height: 600px;
+
+  background-color: rgb(39, 38, 38);
+  color: white;
+  border: solid #2196F3;
+  border-radius: 25px;
+
+
+}
+
 
 
 .form-TextInput input {

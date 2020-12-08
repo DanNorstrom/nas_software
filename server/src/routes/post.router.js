@@ -14,7 +14,7 @@ find() returns a promise, returning JSON format
 
 
 /* Get all Posts */
-postRouter.get('/', (req, res, next) => {
+postRouter.get('/stage1raw/', (req, res, next) => {
     STAGE_1.find({} , function(err, result){
         if(err){
             res.status(400).send({
