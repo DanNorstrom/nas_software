@@ -15,7 +15,7 @@ These numbers are critical to upper-management because they can reveal latent pr
 Solution? In this project I will develop a user-friendly NAS software, where nurses can report their NAS swiftly and upper-management can receive reports in the software dashboard. It will follow the NAS-model to the point, keeping up with the required standards to provide accurate and useful reports at a real hospital. The main reports will include the overview of the recommended number of nurses at an ICU based on time, general NAS as well as patient-NAS/nurse-NAS.<br>
 
 
-# Docker + Node.js
+# Docker + MERN-stack
 
 # Run all containers
 docker-compose up
