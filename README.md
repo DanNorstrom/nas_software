@@ -24,7 +24,7 @@ docker-compose up
 docker-compose up --force-recreate --build -d<br>
 docker image prune -f<br>
 docker-compose down -v<br>
-<br>
+
 # build
 docker build -t <user>/nasapp:0.1 .
 <br>
