@@ -6,7 +6,7 @@
 
 [1] https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4188466/
 
-# about me and this project
+# About me and this project
 
 I’ve had the opportunity earlier this year to work for a Norwegian ICU with a NAS project. I designed, calculated and graphed data in excel. This could be inferred as the beta-version of this Capstone project.
 At an ICU the nurse's workload depends on a wide arrangement of events. This workload is commonly uneven, depending on hospitals, times, regions and routines. NAS (Nurse activity Score) is a proven international standard to track this phenomenon.
