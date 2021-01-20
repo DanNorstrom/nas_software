@@ -3,15 +3,14 @@
 FROM node:12
 
 # Working directory be app
-WORKDIR /usr/app
-
-COPY package*.json ./
+WORKDIR /usr/src/app
 
 # Install dependencies in /usr/app/node_modules
+COPY package.json /usr/src/app/
 RUN npm install
 
 # copy local files to app folder
-COPY . .
+COPY . /usr/src/app
 
 EXPOSE 3000
 

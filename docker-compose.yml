@@ -21,8 +21,8 @@ services: #Different containers
     networks:
       - app-network
     volumes:
-      - ./client/:/usr/app
-      - /usr/app/node_modules
+      - ./client/:/usr/src/app
+      - /usr/src/app/node_modules
     depends_on:
       - server
 

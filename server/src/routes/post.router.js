@@ -93,6 +93,7 @@ postRouter.post("/stage1/", (req, res, next) => {
     BA22: req.body.BA22,
     BA23: req.body.BA23
   };
+
    STAGE_1.create(newPost, function(err, result) {
     if(err){
         res.status(400).send({
@@ -169,5 +170,20 @@ postRouter.delete("/:post_id", (req, res, next) => {
     });
   });
 });
+
+
+
+
+
+/* Data pre-processing API for graphs*/
+// const data = require("../controllers/data.controller.js");
+
+
+
+
+
+
+
+
 
 module.exports = postRouter;
