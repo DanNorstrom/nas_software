@@ -213,7 +213,7 @@
   color: white;
 }
 
-.grid-FormContainerMenu {
+.menu-Container {
   display: grid;
   margin-left: auto;
   margin-right: auto;
@@ -223,7 +223,7 @@
   width: 90%;
   grid-column-gap: 18px;
 
- grid-template-columns: auto auto auto;
+ grid-template-columns: auto auto auto auto;
   /* background-color: #eee;
   border: solid #ffffff;
   border-radius: 25px; */
@@ -290,7 +290,7 @@
   border-radius: 25px;
 }
 
-.report-Container {
+.report-Container2 {
   display: grid;
   margin-left: auto;
   margin-right: auto;
@@ -300,6 +300,29 @@
   
   width: 90%;
   grid-template-columns: 48.5% 48.5%;
+  grid-column-gap: 18px;
+  margin-bottom: -2px;
+
+  min-height: 300px;
+
+  /* background-color: #eee;
+  border: solid #ffffff;
+  border-radius: 25px; */
+
+  background-color: rgb(39, 38, 38);
+  color: white;
+}
+
+.report-Container1 {
+  display: grid;
+  margin-left: auto;
+  margin-right: auto;
+
+  padding: 5px; 
+  padding-bottom: 2px; /*bugg? required for symmetry*/
+  
+  width: 90%;
+  grid-template-columns: 97%;
   grid-column-gap: 18px;
   margin-bottom: -2px;
 

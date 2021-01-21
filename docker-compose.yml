@@ -13,6 +13,12 @@ services: #Different containers
     volumes:
       - ./server/:/usr/src/app
       - /usr/src/app/node_modules
+    # environment:
+    #   - "http.cors.allow-origin=http://localhost:3000"
+    #   - "http.cors.allow-origin=http://localhost:8080"
+    #   - "http.cors.enabled=true"
+    #   - "http.cors.allow-headers=X-Requested-With,X-Auth-Token,Content-Type,Content-Length,Authorization"
+    #   - "http.cors.allow-credentials=true"
 
   client: #React app
     build: ./client

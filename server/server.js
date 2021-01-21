@@ -13,6 +13,7 @@ app.use(cors());
 
 // Routes
 const postRouter = require('./src/routes/post.router');
+const dataRouter = require('./src/routes/data.router')
 
 // Our DB Configuration
 require('./src/database');
@@ -29,7 +30,12 @@ app.use(bodyParser.json());
 const CLIENT_BUILD_PATH = path.join(__dirname, "../client/build");
 app.use(express.static(CLIENT_BUILD_PATH));
 
+
+// post protocols
 app.use('/posts', postRouter);
+
+// data preprocessing controllers
+// app.use('/data', dataRouter)
 
 // Server React Client
 // app.get("/", function(req, res) {
