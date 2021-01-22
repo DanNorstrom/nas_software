@@ -46,7 +46,7 @@ class ReportJSON extends React.Component {
             // return <h1>{item.PATIENT_ID}</h1>
             // return <h1>{JSON.stringify(item)}</h1>
           })} */}
-          <ReactJson src={this.state.data} theme="monokai" collapsed="true" iconStyle="circle" name="Patient JSON"/>
+          <ReactJson src={this.state.data} theme="monokai" collapsed="false" iconStyle="circle" name="Patient JSON"/>
           {/* </ul> */}
         </div>
     )

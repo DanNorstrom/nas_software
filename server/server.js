@@ -35,7 +35,7 @@ app.use(express.static(CLIENT_BUILD_PATH));
 app.use('/posts', postRouter);
 
 // data preprocessing controllers
-// app.use('/data', dataRouter)
+app.use('/data', dataRouter)
 
 // Server React Client
 // app.get("/", function(req, res) {

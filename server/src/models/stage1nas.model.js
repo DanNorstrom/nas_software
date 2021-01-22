@@ -51,7 +51,6 @@ const postSchema = new mongoose.Schema({
     BA6A: Boolean,
     BA6B: Boolean,
     BA6C: Boolean,
-    BA6D: Boolean,
     BA7A: Boolean,
     BA7B: Boolean,
     BA8A: Boolean,

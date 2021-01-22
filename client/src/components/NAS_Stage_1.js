@@ -25,7 +25,6 @@ function NAS_STAGE_1() {
     BA6A: false,
     BA6B: false,
     BA6C: false,
-    BA6D: false,
     BA7A: false,
     BA7B: false,
     BA8A: false,

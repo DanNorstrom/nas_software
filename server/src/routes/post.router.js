@@ -96,17 +96,18 @@ postRouter.post("/stage1/", (req, res, next) => {
 
    STAGE_1.create(newPost, function(err, result) {
     if(err){
-        res.status(400).send({
-          success: false,
-          error: err.message,
-          message: "post wasnt created"
-        });
-    }
-      res.status(201).send({
-        success: true,
-        data: result,
-        message: "Post created successfully"
+      res.status(400).send({
+        success: false,
+        error: err.message,
+        message: "post wasnt created"
       });
+      return; // dont run other code after error
+    }
+    res.status(201).send({
+      success: true,
+      data: result,
+      message: "Post created successfully"
+    });
   });
 });
 
@@ -122,18 +123,19 @@ postRouter.post("/stage2/", (req, res, next) => {
   };
    STAGE_2.create(newPost, function(err, result) {
     if(err){
-        res.status(400).send({
-          success: false,
-          error: err.message,
-          message: "post wasnt created"
-        });
-    }
-      res.status(201).send({
-        success: true,
-        data: result,
-        message: "Post created successfully"
+      res.status(400).send({
+        success: false,
+        error: err.message,
+        message: "post was not created"
       });
-  });
+      return; // dont run other code after error
+    }
+    res.status(201).send({
+      success: true,
+      data: result,
+      message: "Post created successfully"
+    });
+});
 });
 
 /* Edit Single Post */
@@ -170,20 +172,5 @@ postRouter.delete("/:post_id", (req, res, next) => {
     });
   });
 });
-
-
-
-
-
-/* Data pre-processing API for graphs*/
-// const data = require("../controllers/data.controller.js");
-
-
-
-
-
-
-
-
 
 module.exports = postRouter;
