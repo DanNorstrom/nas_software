@@ -79,20 +79,19 @@ exports.PatientNAS_on_date = (req, res, next) => {
             // if existing patient, find earliest and latest time
             else {
                 // add earliest if earliest
-                var t_in_old = new Date("01/01/1970 "+time_range_map.get(p_id)[0])
+                var t_in_old = new Date("01/01/1970 "+time_range_map.get(p_id).TIME_IN)
                 var t_in_new = new Date("01/01/1970 "+result[i].TIME_IN)
                 var p_date_in = (t_in_new < t_in_old) ? t_in_new : t_in_old;
                 
                 // add latest if latest
-                var t_out_old = new Date("01/01/1970 "+time_range_map.get(p_id)[1])
+                var t_out_old = new Date("01/01/1970 "+time_range_map.get(p_id).TIME_OUT)
                 var t_out_new = new Date("01/01/1970 "+result[i].TIME_OUT)
                 var p_date_out = (t_out_new > t_out_old) ? t_out_new : t_out_old;
 
                 // convert back to HH:MM format
-                p_in = p_date_in.toTimeString().split(' ')[1]
-                p_out = p_date_out.toTimeString().split(' ')[1]
+                p_in = p_date_in.toTimeString().split(' ')[0].slice(0,5)
+                p_out = p_date_out.toTimeString().split(' ')[0].slice(0,5)
 
-                // input this patient
                 time_range_map.set(p_id, {TIME_IN: p_in, TIME_OUT: p_out})
             }
         }
@@ -100,18 +99,13 @@ exports.PatientNAS_on_date = (req, res, next) => {
         // calculate time from time_in and time_out
         time_map = new Map();
         time_range_map.forEach((value,key) => {
-            var t_earliest = new Date("01/01/1970 "+value[0])
-            var t_latest = new Date("01/01/1970 "+value[1])
+            var t_earliest = new Date("01/01/1970 "+value.TIME_IN)
+            var t_latest = new Date("01/01/1970 "+value.TIME_OUT)
             var t_diff = Math.abs(t_latest - t_earliest)
-            var hours = Math.round(t_diff)
+            var hours = Math.round(t_diff/1000/60/60)   //MS -> hour
             if (hours > 8) hours = 8;   // 8+ hours is a full day treatment
             time_map.set(key, hours)
         })
-
-
-
-
-
 
 
         // Basic activities map
@@ -250,33 +244,52 @@ exports.PatientNAS_on_date = (req, res, next) => {
         });
         
 
-        // data struct check
-        console.log(ba_tot_map)
-        console.log(time_map)
-        console.log("time_map is broken")
-
+        //data struct check
+        //console.log(ba_tot_map)
+        //console.log(time_range_map)
+        //console.log(time_map)
+        //console.log("time_map is broken")
 
 
 
         // calculate Patient NAS
-        patient_nas_map = new Map()
+        patient_nas_payload = [];
         ba_tot_map.forEach((value,key) => {
 
         // nas weight for this patient
         var time_weight = hour_map.get(time_map.get(key))
-
+    
         // calc nas
         patient_nas = value * time_weight;
-
-        patient_nas_map.set(key, patient_nas)
+        console.log(patient_nas)
+        patient_nas_payload.push({"PATIENT_ID":key, "NAS":patient_nas})
         })
 
-        var payload = new Array([...patient_nas_map])
-        //var payload = JSON.stringify([...patient_nas_map]);
         
+        // ##TODO##
+
+        /* add Date-range to query, format as: we can skip this if me multiQuery our api, not recommended
+        
+        {
+            "success": true,
+            "data": [
+                {
+                    "PATIENT_ID": "1",
+                    "DATE": "2021/01/19",
+                    "NAS": 5.5
+                },
+                {
+                    "PATIENT_ID": "2",
+                    "DATE": "2021/01/19",
+                    "NAS": 49.2
+                }
+            ]
+        }
+
+        */
         res.status(200).send({
             'success': true,
-            'data': patient_nas_map,
+            'data': patient_nas_payload
         });
     });
 }
