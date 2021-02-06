@@ -14,16 +14,14 @@ function ReportPatientNas() {
     
     const [state, setState] = useState({ 
         data: [],
-        DATE: null
+        DATE:  "2021-02-01"//new Date().toLocaleDateString('en-CA') //new Date() --> curent date --> useEffect on load to render first time
     });
     const [chartData,setChartData] = useState({}) //empty object
 
     function handleChange(evt) {
-        const value =
-          evt.target.type === "checkbox" ? evt.target.checked : evt.target.value;
         setState({
           ...state,
-          [evt.target.name]: value
+          [evt.target.name]: evt.target.value
         });
     }
     
@@ -51,11 +49,26 @@ function ReportPatientNas() {
                 setChartData({
                     labels: apiID,
                     datasets: [{
+                        barPercentage: 0.8,
                         label: "Patient NAS / Day",
-                        backgroundColor: 'rgb(255, 99, 132)',
-                        borderColor: 'rgb(255, 99, 132)',
+                        backgroundColor: 'rgb(255, 99, 132, 0.0)',
+                        borderColor: 'rgb(255, 99, 132, 1)',
+                        borderWidth: '2',
                         data: apiNAS,
-                    }]
+                    }],
+                    options: {
+                        // responsive true
+                        maintainAspectRatio : false,
+                        responsive: true
+                        // scales: {
+                        //     yAxes: [{
+                        //         ticks: {
+                        //             beginAtZero: true
+                        //         }
+                        //     }]
+                        // }
+                        
+                    }
                 })
                 //console.log(json.data)              
                 //console.log(state.data)
@@ -75,13 +88,17 @@ function ReportPatientNas() {
     //     })
     // }
 
+
+    // this works, fix after we have removed the form
+
     // useEffect(() => {
-    //     Chart();
-    // })
+    //     formSubmit();
+    //  }, []);
+    
 
      //console.log([...state.data])
     return (
-        <div className="report-item">
+        <div className="dashboard-item">
 
             {/* <div>
                 <XYPlot height={300} width={300}>
@@ -91,14 +108,16 @@ function ReportPatientNas() {
                 <VerticalBarSeries data={[...state.data]} />
                 </XYPlot>
             </div> */}
-
-            <div>
-                <Bar data={chartData}/>
+            <div className="dashboard-item-top">
+                <a>description</a>
             </div>
 
-            <form onSubmit={formSubmit}>
-            <div class="grid-FormContainer1" > 
-                <div class="form-TextInput">
+            <div className="dashboard-item-graph">
+                <Bar data={chartData} options={{ maintainAspectRatio: false, responsive: true }}/>
+            </div>
+
+            <div className="dashboard-item-bottom">
+                <form onSubmit={formSubmit}>
                     <input
                     type="date"
                     name="DATE"
@@ -106,16 +125,13 @@ function ReportPatientNas() {
                     onChange={handleChange}
                     required
                     />
-                </div>
-            </div>
-
-            {/* submit button */}
-            <div className="grid-FormContainer1">
+                {/* submit button */}
                 <span>
                     <button type="submit" >Get Date's NAS</button>
                 </span>
+                </form>
             </div>
-            </form>
+
         </div>
     )
 };

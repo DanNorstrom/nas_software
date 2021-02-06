@@ -4,26 +4,24 @@ import { NavLink } from "react-router-dom";
 const Navbar = () => {
   return (
     <nav>
-      <div className="grid-MainContainer">
-      <div class="menu-Container"> 
+      <div className="nav-main">
 
         <NavLink to="/"> 
-          <button class="NavBarButton"><h1>NAS Appendix 1</h1></button>
+          <button className="navbarbutton"><h1>Patient Reg.</h1></button>
         </NavLink>
         
 
         <NavLink to="/NasStage2">
-          <button class="NavBarButton"><h1>Personnel Registration</h1></button>
+          <button className="navbarbutton"><h1>Personnel Reg.</h1></button>
         </NavLink>
 
         <NavLink to="/CheckData">
-          <button class="NavBarButton"><h1>Check Data</h1></button>
+          <button className="navbarbutton"><h1>Data Validation</h1></button>
         </NavLink>
 
         <NavLink to="/ReportDashboard">
-          <button class="NavBarButton"><h1>Report Dashboard</h1></button>
+          <button className="navbarbutton"><h1>Report Dashboard</h1></button>
         </NavLink>
-      </div>
       </div>
     </nav>
   );

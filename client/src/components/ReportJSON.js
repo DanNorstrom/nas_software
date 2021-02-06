@@ -40,7 +40,7 @@ class ReportJSON extends React.Component {
 
   render() {
     return (    
-        <div className="report-item">
+        <div className="dashboard-item">
           {/* <ul> */}
           {/* {this.state.data.map(function(item, index) {
             // return <h1>{item.PATIENT_ID}</h1>

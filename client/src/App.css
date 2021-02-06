@@ -1,5 +1,6 @@
 .App {
   text-align: center;
+  font-family: "Poppins",sans-serif;
   /* background-color: #282c34; */
   /*background-image: url("./resources/bkhospital1.jpg");*/
   background-image: url("./resources/vectorFish.png");
@@ -164,6 +165,8 @@
   grid-column-gap: 10px;
   margin-bottom: -2px;
 
+  min-height: 110px;
+
   /* background-color: #eee;
   border: solid #ffffff;
   border-radius: 25px; */
@@ -213,25 +216,6 @@
   color: white;
 }
 
-.menu-Container {
-  display: grid;
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: 10px;
-
-  padding-bottom: 2px; /*bugg? required for symmetry*/
-  width: 90%;
-  grid-column-gap: 18px;
-
- grid-template-columns: auto auto auto auto;
-  /* background-color: #eee;
-  border: solid #ffffff;
-  border-radius: 25px; */
-
-  background-color: rgb(39, 38, 38);
-  color: white;
-}
-
 
 .grid-FormContainer2 {
   display: grid;
@@ -273,22 +257,138 @@
   border-radius: 25px;
 }
 
-.report-MainContainer {
-  display: grid;
-  margin-left: auto;
-  margin-right: auto;
 
-  width: 70%;
+/* ###########  new design  ########### */
+:root {
+  --background:#212529;
+  --itembackground:#1b232a;
+
+}
+
+
+.dashboard-main {
+  /* display: grid;
+  margin-left: auto;
+  margin-right: auto; */
+
+  /* width: 70%;
   margin-bottom: 5px;
   padding-top: 25px;
-  padding-bottom: 25px;
+  padding-bottom: 25px; */
 
-  background-color: rgb(39, 38, 38);
+  background-color: var(--background);
   color: white;
   /*border: solid #2196F3;*/
   border: solid #63afee;
-  border-radius: 25px;
+  border-width: 1px; /* mark struct for now */
+  /* border-radius: 25px; */
+
+  padding-left: 200px; /* Make room for hover main menu bar component */
+  margin-right: -15px;
+  margin-left: -15px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
 }
+
+.dashboard-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  margin-top: 15px;
+  margin-bottom: 15px;
+
+  background-color: var(--itembackground);
+  /* margin-left: 32px;
+  border-radius: 10px;  */
+  
+  /* overflow: hidden;  Counters content-min shrink lock
+
+
+  position: relative;
+  direction: ltr;
+  width: 100%; */
+
+  /* box-shadow: 0 1px 20px 0 rgba(0,0,0,.1); */
+
+  border: 1px solid #63afee;
+  word-wrap: break-word;
+
+  min-width: 0;
+  padding-left: 5px;
+  padding-right: 5px;
+  flex: 1 1 auto;
+  width: 100%;
+  overflow: hidden;
+}
+
+.dashboard-item-top {
+  margin-top: 5px;
+  position: relative;
+  width: 500px;
+
+}
+
+.dashboard-item-graph {
+  height: 250px;
+  width: 100%;
+
+}
+
+.dashboard-item-bottom {
+  margin-bottom: 5px;
+  position: relative;
+  width: 500px;
+
+}
+
+
+.nav-main {
+  display: grid;
+  align-items: center;
+  grid-template-columns: auto auto auto auto;
+
+  margin-right: -15px;
+  margin-left: -15px;
+
+  background-color: var(--background);
+  color: white;
+  border: solid #63afee;
+  border-width: 1px; /* mark struct for now */
+}
+
+.navbarbutton {
+
+  font-family: Arial, Helvetica, sans-serif;
+  color: white;
+  background-color: var(--background);
+  border-width: 0px;
+}
+
+
+
+ /* DO to all elements: include padding  and border in elements total height and width */
+ * {
+  box-sizing: border-box;
+}
+
+
+/* #########  end of new design ######### */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 .report-Container2 {
   display: grid;
@@ -336,19 +436,6 @@
   color: white;
 }
 
-.report-item {
-  width: 100%;
-  margin-bottom: 5px;
-  padding-top: 25px;
-  padding-bottom: 25px;
-
-
-  background-color: rgb(39, 38, 38);
-  color: white;
-  /*border: solid #2196F3;*/
-  border: solid #63afee;
-  border-radius: 25px;
-}
 
 
 .grid-MainReportDashboard{
@@ -384,14 +471,5 @@
   font-size: 40px;
 
   border: solid white;
-  border-radius: 10px;
-}
-
-.NavBarButton {
-
-  font-family: Arial, Helvetica, sans-serif;
-  color: white;
-
-  background-color: #282c34;
   border-radius: 10px;
 }
