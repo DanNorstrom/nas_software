@@ -11,11 +11,12 @@ import { Bar, Doughnut } from 'react-chartjs-2';
 
 // take nas stage 1 input from nurses once per patient per shift.
 // and save to stage1 collection
-function ReportPatientNas(props) {
+function ReportPatientWeights(props) {
     
     const [state, setState] = useState({ 
         data: [],
-        DATE:  "2021-03-23"//new Date().toLocaleDateString('en-CA') //new Date() --> curent date --> useEffect on load to render first time
+        DATE1:  "2021-03-23",
+        DATE2: "2021-04-23"     //new Date().toLocaleDateString('en-CA') //new Date() --> curent date --> useEffect on load to render first time
     });
     const [chartData,setChartData] = useState(
         {
@@ -82,7 +83,7 @@ function ReportPatientNas(props) {
             headers: { 'Content-Type': 'application/json','Access-Control-Allow-Origin' : '*' }
         };
 
-        fetch("http://localhost:8080/data/patient_nas/"+state.DATE+"T00:00:00.000+00:00", requestOptions)
+        fetch("http://localhost:8080/data/patient_weights/"+state.DATE1+"T00:00:00.000+00:00/"+state.DATE2+"T00:00:00.000+00:00", requestOptions)
             .then(res => res.json())
             .then(json => {
                 setState({
@@ -90,19 +91,35 @@ function ReportPatientNas(props) {
                     data: json.data
                   });
                 for (const dataObj of json.data) {
-                    apiID.push(parseInt(dataObj.PATIENT_ID))
-                    apiNAS.push(parseInt(dataObj.NAS))
+                    apiID.push(dataObj.RANGE)
+                    apiNAS.push(parseInt(dataObj.NAS_WEIGHT))
                 }
 
                 setChartData({
                     labels: apiID,
                     datasets: [{
                         barPercentage: 0.8,
-                        label: "Patient NAS / Day",
-                        backgroundColor: getComputedStyle(document.documentElement).getPropertyValue(props.graph+'-fill'),
-                        borderColor: getComputedStyle(document.documentElement).getPropertyValue(props.graph+'-line'),
-                        hoverBackgroundColor: getComputedStyle(document.documentElement).getPropertyValue(props.graph+'-hoverfill'),
-                        hoverBorderColor: getComputedStyle(document.documentElement).getPropertyValue(props.graph+'-hoverline'),
+                        label: "Patient NAS Weight / Time",
+                        backgroundColor: [
+                            getComputedStyle(document.documentElement).getPropertyValue('--graph-blue-fill'),
+                            getComputedStyle(document.documentElement).getPropertyValue(props.graph+'-fill'),
+                            getComputedStyle(document.documentElement).getPropertyValue('--graph-green-fill')
+                        ],
+                        borderColor: [
+                            getComputedStyle(document.documentElement).getPropertyValue('--graph-blue-line'),
+                            getComputedStyle(document.documentElement).getPropertyValue(props.graph+'-line'),
+                            getComputedStyle(document.documentElement).getPropertyValue('--graph-green-line')
+                        ],
+                        hoverBackgroundColor: [
+                            getComputedStyle(document.documentElement).getPropertyValue('--graph-blue-hoverfill'),
+                            getComputedStyle(document.documentElement).getPropertyValue(props.graph+'-hoverfill'),
+                            getComputedStyle(document.documentElement).getPropertyValue('--graph-green-hoverfill')
+                        ],
+                        hoverBorderColor: [
+                            getComputedStyle(document.documentElement).getPropertyValue('--graph-blue-hoverline'),
+                            getComputedStyle(document.documentElement).getPropertyValue(props.graph+'-hoverline'),
+                            getComputedStyle(document.documentElement).getPropertyValue('--graph-green-hoverline')
+                        ],
                         borderWidth: '2',
                         data: apiNAS,
                     }]
@@ -124,7 +141,7 @@ function ReportPatientNas(props) {
                 // })
 
 
-                //console.log(json.data)              
+                console.log(json.data)              
                 //console.log(state.data)
             }
         );
@@ -150,20 +167,28 @@ function ReportPatientNas(props) {
 
 
             <div className="dashboard-item-top">
-                <a>What NAS numbers where reported today?</a>
+                 <a>Patient NAS Weight / Time <br></br></a>
+                <a>How heavy was the patients in the time peroid?</a>
             </div>
 
             <div className="dashboard-item-graph">
                 {/* <canvas id="myChart"/> */}
-                <Bar data={chartData} options={chartOptions}/>
+                <Doughnut data={chartData} options={chartOptions}/>
             </div>
 
             <div className="dashboard-item-bottom">
                 <form onSubmit={formSubmit}>
                     <input
                     type="date"
-                    name="DATE"
-                    value={state.DATE}
+                    name="DATE1"
+                    value={state.DATE1}
+                    onChange={handleChange}
+                    required
+                    />
+                    <input
+                    type="date"
+                    name="DATE2"
+                    value={state.DATE2}
                     onChange={handleChange}
                     required
                     />
@@ -177,4 +202,4 @@ function ReportPatientNas(props) {
     )
 };
 
-export default ReportPatientNas
+export default ReportPatientWeights

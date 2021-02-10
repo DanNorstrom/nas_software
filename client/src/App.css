@@ -257,13 +257,39 @@
   border-radius: 25px;
 }
 
-
+/* #################################### */
 /* ###########  new design  ########### */
+/* #################################### */
+
 :root {
-  --background:#212529;
-  --itembackground:#1b232a;
+  --background:#212529; /*Dashboard background*/
+  --itembackground:#1b232a; /*#1b232a dashboard item background*/
+  --graphbackground: #dd1212;
+
+  --graph-0: rgb(255, 99, 132, 0.0);
+
+  --graph-red-line: rgb(255, 99, 132, 1);
+  --graph-red-hoverline: var(--graph-red-line);
+  --graph-red-fill: rgb(255, 99, 132, 0.1);
+  --graph-red-hoverfill: rgb(255, 99, 132, 0.3);
+  
+  --graph-red-axiz: rgb(255, 99, 132, 0.1);
+
+  --graph-green-line: rgba(99, 255, 133, 0.856);
+  --graph-green-hoverline: var(--graph-green-line);
+  --graph-green-fill: rgba(99, 255, 133, 0.1);
+  --graph-green-hoverfill: rgba(99, 255, 133, 0.3);
+
+  --graph-blue-line: rgba(49, 104, 255, 0.856);
+  --graph-blue-hoverline: var(--graph-blue-line);
+  --graph-blue-fill: rgba(99, 102, 255, 0.1);
+  --graph-blue-hoverfill: rgba(99, 102, 255, 0.3);
 
 }
+
+/* .col-xs-6 {
+  flex-basis: 50%;
+} */
 
 
 .dashboard-main {
@@ -283,16 +309,18 @@
   border-width: 1px; /* mark struct for now */
   /* border-radius: 25px; */
 
-  padding-left: 200px; /* Make room for hover main menu bar component */
+  padding-left: 250px; /* Make room for hover main menu bar component */
   margin-right: -15px;
   margin-left: -15px;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+  overflow: hidden
 }
 
 .dashboard-item {
   display: flex;
+  flex-wrap: wrap;
   flex-direction: column;
   align-items: center;
 
@@ -300,39 +328,27 @@
   margin-bottom: 15px;
 
   background-color: var(--itembackground);
-  /* margin-left: 32px;
-  border-radius: 10px;  */
-  
-  /* overflow: hidden;  Counters content-min shrink lock
-
-
-  position: relative;
-  direction: ltr;
-  width: 100%; */
-
-  /* box-shadow: 0 1px 20px 0 rgba(0,0,0,.1); */
-
   border: 1px solid #63afee;
   word-wrap: break-word;
 
   min-width: 0;
-  padding-left: 5px;
-  padding-right: 5px;
-  flex: 1 1 auto;
-  width: 100%;
-  overflow: hidden;
+  flex-basis: 50%;
+  overflow: hidden
+
 }
 
 .dashboard-item-top {
   margin-top: 5px;
   position: relative;
   width: 500px;
+  overflow: hidden
 
 }
 
 .dashboard-item-graph {
   height: 250px;
   width: 100%;
+  overflow: hidden
 
 }
 
@@ -340,6 +356,7 @@
   margin-bottom: 5px;
   position: relative;
   width: 500px;
+  overflow: hidden
 
 }
 
@@ -373,9 +390,9 @@
   box-sizing: border-box;
 }
 
-
-/* #########  end of new design ######### */
-
+/* #################################### */
+/* #########  end of new design ####### */
+/* #################################### */
 
 
 
