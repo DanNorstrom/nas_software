@@ -36,16 +36,18 @@ function ReportPatientWeights(props) {
             responsive: true,
             legend: {
                 display: true,
-                position: 'top',
+                position: 'left',
                 labels: {
                     fontColor: 'rgb(255, 99, 132)',
                     fontSize: 16,
                 }
             },
             scales: {
-                xAxes: [{
+                xAxes: [
+                    {
+                    display: false,
                     gridLines: {
-                        display: true,
+                        display: false,
                         color: getComputedStyle(document.documentElement).getPropertyValue(props.graph+'-axiz'),
                         lineWidth:1,
                         zeroLineColor: "transparent"
@@ -53,12 +55,13 @@ function ReportPatientWeights(props) {
                 }],
                 yAxes: [{
                     gridLines: {
-                        display: true,
+                        display: false,
                         color: getComputedStyle(document.documentElement).getPropertyValue(props.graph+'-axiz'),
                         lineWidth:1,
                         zeroLineColor: "transparent"
                     },
                     ticks: {
+                        display: false,
                         beginAtZero: true
                     }
                 }]
@@ -120,7 +123,6 @@ function ReportPatientWeights(props) {
                             getComputedStyle(document.documentElement).getPropertyValue(props.graph+'-hoverline'),
                             getComputedStyle(document.documentElement).getPropertyValue('--graph-green-hoverline')
                         ],
-                        borderWidth: '2',
                         data: apiNAS,
                     }]
                 })

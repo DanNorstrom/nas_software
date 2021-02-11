@@ -17,11 +17,13 @@ class ReportDashboard extends React.Component {
 
   <div className="dashboard-main">
     <Grid fluid>
+      
+        {/* phone, small, medium large viewports */}
+
         <Row>
-          <Col xs><ReportPatientNas graph={'--graph-red'}/></Col>
-          <Col xs><ReportPatientWeights graph={'--graph-red'}/></Col>
-          <Col xs><ReportPatientNas graph={'--graph-red'}/></Col>
-          <Col xs><ReportPatientNas graph={'--graph-red'}/></Col>
+          <Col xs={12} sm={12} md={12} lg={4}><ReportPatientNas graph={'--graph-red'}/></Col>
+          <Col xs={12} sm={12} md={12} lg={4}><ReportPatientWeights graph={'--graph-red'}/></Col>
+          <Col xs={12} sm={12} md={12} lg={4}><ReportPatientNas graph={'--graph-red'}/></Col>
         </Row>
 
         <Row>

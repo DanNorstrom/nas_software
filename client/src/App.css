@@ -266,6 +266,8 @@
   --itembackground:#1b232a; /*#1b232a dashboard item background*/
   --graphbackground: #dd1212;
 
+  --office-blue: #63afee;
+
   --graph-0: rgb(255, 99, 132, 0.0);
 
   --graph-red-line: rgb(255, 99, 132, 1);
@@ -287,10 +289,6 @@
 
 }
 
-/* .col-xs-6 {
-  flex-basis: 50%;
-} */
-
 
 .dashboard-main {
   /* display: grid;
@@ -309,55 +307,40 @@
   border-width: 1px; /* mark struct for now */
   /* border-radius: 25px; */
 
-  padding-left: 250px; /* Make room for hover main menu bar component */
+  /*padding-left: 250px;  Make room for hover main menu bar component */
   margin-right: -15px;
   margin-left: -15px;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  overflow: hidden
+  overflow: hidden;
 }
 
 .dashboard-item {
-  display: flex;
-  flex-wrap: wrap;
-  flex-direction: column;
-  align-items: center;
-
   margin-top: 15px;
-  margin-bottom: 15px;
 
   background-color: var(--itembackground);
-  border: 1px solid #63afee;
+  border: 1px solid var(--office-blue);
+  border-radius: 15px;
+
   word-wrap: break-word;
-
-  min-width: 0;
-  flex-basis: 50%;
-  overflow: hidden
-
+  overflow: hidden;
 }
 
 .dashboard-item-top {
+  height: 2em;
   margin-top: 5px;
-  position: relative;
-  width: 500px;
-  overflow: hidden
-
 }
 
 .dashboard-item-graph {
-  height: 250px;
-  width: 100%;
-  overflow: hidden
-
+  height: 15em;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 .dashboard-item-bottom {
+  height: 2em;
   margin-bottom: 5px;
-  position: relative;
-  width: 500px;
-  overflow: hidden
+}
 
+.col-lg-3 {
 }
 
 
