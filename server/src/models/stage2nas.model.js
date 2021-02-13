@@ -2,7 +2,15 @@ const mongoose = require('mongoose');
 
 // Define the schema
 const postSchema = new mongoose.Schema({
-    PERSONNEL_COUNT: {
+    Personnel_D: {
+        type: Number,
+        required: true
+    },
+    Personnel_A: {
+        type: Number,
+        required: true
+    },
+    Personnel_N: {
         type: Number,
         required: true
     },

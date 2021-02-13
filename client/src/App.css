@@ -1,9 +1,21 @@
 .App {
   text-align: center;
   font-family: "Poppins",sans-serif;
+  min-height: 100vh;
   /* background-color: #282c34; */
   /*background-image: url("./resources/bkhospital1.jpg");*/
-  background-image: url("./resources/vectorFish.png");
+  /* background-image: url("./resources/vectorFish.png"); */
+
+  background-color: var(--background);
+  color: white;
+  /*border: solid #2196F3;*/
+  border: solid #63afee;
+  border-width: 1px; /* mark struct for now */
+  /* border-radius: 25px; */
+
+  /*padding-left: 250px;  Make room for hover main menu bar component */
+
+  overflow: hidden;
 }
 
 .App-logo {
@@ -246,14 +258,14 @@
   margin-right: auto;
 
   width: 70%;
-  margin-bottom: 5px;
+  margin-top: 15px;
   padding-top: 25px;
   padding-bottom: 25px;
 
   background-color: rgb(39, 38, 38);
   color: white;
   /*border: solid #2196F3;*/
-  border: solid #63afee;
+  border: solid var(--office-blue);
   border-radius: 25px;
 }
 
@@ -262,7 +274,7 @@
 /* #################################### */
 
 :root {
-  --background:#212529; /*Dashboard background*/
+  --background:#212529; /* Dashboard background*/
   --itembackground:#1b232a; /*#1b232a dashboard item background*/
   --graphbackground: #dd1212;
 
@@ -270,22 +282,41 @@
 
   --graph-0: rgb(255, 99, 132, 0.0);
 
+  --graph-red-axiz: rgb(255, 99, 132, 0.1);
+
   --graph-red-line: rgb(255, 99, 132, 1);
   --graph-red-hoverline: var(--graph-red-line);
   --graph-red-fill: rgb(255, 99, 132, 0.1);
   --graph-red-hoverfill: rgb(255, 99, 132, 0.3);
+
+  --graph-orange-line: rgb(255, 174, 99);
+  --graph-orange-hoverline: var(--graph-orange-line);
+  --graph-orange-fill: rgba(255, 148, 49, 0.1);
+  --graph-orange-hoverfill: rgba(255, 148, 49, 0.3);
+
+  --graph-yellow-line: rgb(252, 255, 99);
+  --graph-yellow-hoverline: var(--graph-yellow-line);
+  --graph-yellow-fill: rgba(255, 232, 27, 0.1);
+  --graph-yellow-hoverfill: rgba(255, 232, 27, 0.3);
   
-  --graph-red-axiz: rgb(255, 99, 132, 0.1);
+  --graph-blue-line: rgba(49, 104, 255, 0.856);
+  --graph-blue-hoverline: var(--graph-blue-line);
+  --graph-blue-fill: rgba(99, 102, 255, 0.1);
+  --graph-blue-hoverfill: rgba(99, 102, 255, 0.3);
 
   --graph-green-line: rgba(99, 255, 133, 0.856);
   --graph-green-hoverline: var(--graph-green-line);
   --graph-green-fill: rgba(99, 255, 133, 0.1);
   --graph-green-hoverfill: rgba(99, 255, 133, 0.3);
 
-  --graph-blue-line: rgba(49, 104, 255, 0.856);
-  --graph-blue-hoverline: var(--graph-blue-line);
-  --graph-blue-fill: rgba(99, 102, 255, 0.1);
-  --graph-blue-hoverfill: rgba(99, 102, 255, 0.3);
+
+  /* can we use these with the react-flexbox-grid to call out view settings? */
+  --breakpoint-xs: 0;
+  --breakpoint-sm: 576px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 992px;
+  --breakpoint-xl: 1200px
+
 
 }
 
@@ -303,13 +334,13 @@
   background-color: var(--background);
   color: white;
   /*border: solid #2196F3;*/
-  border: solid #63afee;
-  border-width: 1px; /* mark struct for now */
+  /* border: solid #63afee;
+  border-width: 1px;  */
   /* border-radius: 25px; */
 
   /*padding-left: 250px;  Make room for hover main menu bar component */
-  margin-right: -15px;
-  margin-left: -15px;
+  margin-right: 15px;
+  margin-left: 15px;
   overflow: hidden;
 }
 
@@ -341,6 +372,12 @@
 }
 
 .col-lg-3 {
+}
+
+.button-sub{
+  position:relative;
+  top: 1px;
+  height: 23px;
 }
 
 

@@ -7,7 +7,9 @@ import React, { Component } from 'react';
 function NAS_STAGE_2() {
 
   const [state, setState] = React.useState({ 
-    PERSONNEL_COUNT: "",
+    Personnel_D: "",
+    Personnel_A: "",
+    Personnel_N: "",
     DATE: ""
   });
 
@@ -64,10 +66,41 @@ function NAS_STAGE_2() {
               type="number"
               min="0"
               step="1"
-              name="PERSONNEL_COUNT"
-              value={state.PERSONNEL_COUNT}
+              name="Personnel_D"
+              value={state.Personnel_D}
               onChange={handleChange}
-              placeholder="Personnel Count at Date:"
+              placeholder="Personnel Count Day:"
+              required
+            />
+            </div>
+        </div>
+
+        <div class="grid-FormContainer1">
+          <div class="form-TextInput">
+            <input
+              type="number"
+              min="0"
+              step="1"
+              name="Personnel_A"
+              value={state.Personnel_A}
+              onChange={handleChange}
+              placeholder="Personnel Count Afternoon:"
+              required
+            />
+            </div>
+        </div>
+
+        <div class="grid-FormContainer1">
+          <div class="form-TextInput">
+            <input
+              type="number"
+              min="0"
+              step="1"
+              name="Personnel_N"
+              value={state.Personnel_N}
+              onChange={handleChange}
+              placeholder="Personnel Night:"
+              required
             />
             </div>
         </div>

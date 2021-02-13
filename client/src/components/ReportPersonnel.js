@@ -11,12 +11,11 @@ import { Bar, Doughnut } from 'react-chartjs-2';
 
 // take nas stage 1 input from nurses once per patient per shift.
 // and save to stage1 collection
-function ReportPatientWeights(props) {
+function ReportPersonnel(props) {
     
     const [state, setState] = useState({ 
         data: [],
-        DATE1:  "2021-03-01",
-        DATE2: "2021-04-01"     //new Date().toLocaleDateString('en-CA') //new Date() --> curent date --> useEffect on load to render first time
+        DATE:  "2021-03-23"//new Date().toLocaleDateString('en-CA') //new Date() --> curent date --> useEffect on load to render first time
     });
     const [chartData,setChartData] = useState(
         {
@@ -36,18 +35,16 @@ function ReportPatientWeights(props) {
             responsive: true,
             legend: {
                 display: true,
-                position: 'left',
+                position: 'top',
                 labels: {
-                    fontColor: 'rgb(255, 99, 132)',
+                    fontColor: getComputedStyle(document.documentElement).getPropertyValue(props.graph+'-line'),
                     fontSize: 16,
                 }
             },
             scales: {
-                xAxes: [
-                    {
-                    display: false,
+                xAxes: [{
                     gridLines: {
-                        display: false,
+                        display: true,
                         color: getComputedStyle(document.documentElement).getPropertyValue(props.graph+'-axiz'),
                         lineWidth:1,
                         zeroLineColor: "transparent"
@@ -55,13 +52,12 @@ function ReportPatientWeights(props) {
                 }],
                 yAxes: [{
                     gridLines: {
-                        display: false,
+                        display: true,
                         color: getComputedStyle(document.documentElement).getPropertyValue(props.graph+'-axiz'),
                         lineWidth:1,
                         zeroLineColor: "transparent"
                     },
                     ticks: {
-                        display: false,
                         beginAtZero: true
                     }
                 }]
@@ -78,7 +74,7 @@ function ReportPatientWeights(props) {
     
     function formSubmit(evt = null) {
         if (evt != null) evt.preventDefault();   //prevent default submit behavior.
-        let apiNAS = [];
+        let apiData = [];
         let apiID = [];
  
         var requestOptions = {
@@ -86,7 +82,7 @@ function ReportPatientWeights(props) {
             headers: { 'Content-Type': 'application/json','Access-Control-Allow-Origin' : '*' }
         };
 
-        fetch("http://localhost:8080/data/patient_weights/"+state.DATE1+"T00:00:00.000+00:00/"+state.DATE2+"T00:00:00.000+00:00", requestOptions)
+        fetch("http://localhost:8080/data/personnel_count/"+state.DATE+"T00:00:00.000+00:00", requestOptions)
             .then(res => res.json())
             .then(json => {
                 setState({
@@ -94,44 +90,23 @@ function ReportPatientWeights(props) {
                     data: json.data
                   });
                 for (const dataObj of json.data) {
-                    apiID.push(dataObj.RANGE)
-                    apiNAS.push(parseInt(dataObj.NAS_WEIGHT))
+                    apiData.push(parseInt(dataObj.Personnel_D))
+                    apiData.push(parseInt(dataObj.Personnel_A))
+                    apiData.push(parseInt(dataObj.Personnel_N))
                 }
+                console.log(apiData)
 
                 setChartData({
-                    labels: apiID,
+                    labels: ["Personnel Day","Personnel Afternoon","Personnel night"],
                     datasets: [{
                         barPercentage: 0.8,
-                        label: "Patient NAS Weight / Time",
-                        backgroundColor: [
-                            getComputedStyle(document.documentElement).getPropertyValue('--graph-blue-fill'),
-                            getComputedStyle(document.documentElement).getPropertyValue('--graph-green-fill'),
-                            getComputedStyle(document.documentElement).getPropertyValue('--graph-yellow-fill'),
-                            getComputedStyle(document.documentElement).getPropertyValue('--graph-orange-fill'),
-                            getComputedStyle(document.documentElement).getPropertyValue('--graph-red-fill')
-                        ],
-                        borderColor: [
-                            getComputedStyle(document.documentElement).getPropertyValue('--graph-blue-line'),
-                            getComputedStyle(document.documentElement).getPropertyValue('--graph-green-line'),
-                            getComputedStyle(document.documentElement).getPropertyValue('--graph-yellow-line'),
-                            getComputedStyle(document.documentElement).getPropertyValue('--graph-orange-line'),
-                            getComputedStyle(document.documentElement).getPropertyValue('--graph-red-line')
-                        ],
-                        hoverBackgroundColor: [
-                            getComputedStyle(document.documentElement).getPropertyValue('--graph-blue-hoverfill'),
-                            getComputedStyle(document.documentElement).getPropertyValue('--graph-green-hoverfill'),
-                            getComputedStyle(document.documentElement).getPropertyValue('--graph-yellow-hoverfill'),
-                            getComputedStyle(document.documentElement).getPropertyValue('--graph-orange-hoverfill'),
-                            getComputedStyle(document.documentElement).getPropertyValue('--graph-red-hoverfill')
-                        ],
-                        hoverBorderColor: [
-                            getComputedStyle(document.documentElement).getPropertyValue('--graph-blue-hoverline'),
-                            getComputedStyle(document.documentElement).getPropertyValue('--graph-green-hoverline'),
-                            getComputedStyle(document.documentElement).getPropertyValue('--graph-yellow-hoverline'),
-                            getComputedStyle(document.documentElement).getPropertyValue('--graph-orange-hoverline'),
-                            getComputedStyle(document.documentElement).getPropertyValue('--graph-red-hoverline')
-                        ],
-                        data: apiNAS,
+                        label: "ICU Personnel / Day",
+                        backgroundColor: getComputedStyle(document.documentElement).getPropertyValue(props.graph+'-fill'),
+                        borderColor: getComputedStyle(document.documentElement).getPropertyValue(props.graph+'-line'),
+                        hoverBackgroundColor: getComputedStyle(document.documentElement).getPropertyValue(props.graph+'-hoverfill'),
+                        hoverBorderColor: getComputedStyle(document.documentElement).getPropertyValue(props.graph+'-hoverline'),
+                        borderWidth: '2',
+                        data: apiData,
                     }]
                 })
                 
@@ -151,7 +126,7 @@ function ReportPatientWeights(props) {
                 // })
 
 
-                console.log(json.data)              
+                //console.log(json.data)              
                 //console.log(state.data)
             }
         );
@@ -177,28 +152,20 @@ function ReportPatientWeights(props) {
 
 
             <div className="dashboard-item-top">
-                 <a>Patient NAS Weight / Time <br></br></a>
-                <a>How heavy was the patients in the time peroid?</a>
+                <a>How many nurses worked at the ICU today?</a>
             </div>
 
             <div className="dashboard-item-graph">
                 {/* <canvas id="myChart"/> */}
-                <Doughnut data={chartData} options={chartOptions}/>
+                <Bar data={chartData} options={chartOptions}/>
             </div>
 
             <div className="dashboard-item-bottom">
                 <form onSubmit={formSubmit}>
                     <input
                     type="date"
-                    name="DATE1"
-                    value={state.DATE1}
-                    onChange={handleChange}
-                    required
-                    />
-                    <input
-                    type="date"
-                    name="DATE2"
-                    value={state.DATE2}
+                    name="DATE"
+                    value={state.DATE}
                     onChange={handleChange}
                     required
                     />
@@ -212,4 +179,4 @@ function ReportPatientWeights(props) {
     )
 };
 
-export default ReportPatientWeights
+export default ReportPersonnel

@@ -5,6 +5,9 @@ import ReportJSON from "./ReportJSON"
 // custom dashboard components
 import ReportPatientNas from "./ReportPatientNas"
 import ReportPatientWeights from "./ReportPatientWeights"
+import ReportNAS from "./ReportNAS"
+import ReportPersonnel from "./ReportPersonnel"
+import ReportPatientPersonnelAvgPerShift from "./ReportPatientPersonnelAvgPerShift"
 
 import { Grid, Row, Col } from 'react-flexbox-grid';
 
@@ -19,26 +22,24 @@ class ReportDashboard extends React.Component {
     <Grid fluid>
       
         {/* phone, small, medium large viewports */}
+        <Row>
+          <Col xs><ReportNAS graph={'--graph-red'}/></Col>
+        </Row>
 
         <Row>
           <Col xs={12} sm={12} md={12} lg={4}><ReportPatientNas graph={'--graph-red'}/></Col>
           <Col xs={12} sm={12} md={12} lg={4}><ReportPatientWeights graph={'--graph-red'}/></Col>
-          <Col xs={12} sm={12} md={12} lg={4}><ReportPatientNas graph={'--graph-red'}/></Col>
+          <Col xs={12} sm={12} md={12} lg={4}><ReportPersonnel graph={'--graph-blue'}/></Col>
         </Row>
 
         <Row>
-          <Col xs><ReportPatientNas graph={'--graph-red'}/></Col>
+          <Col xs><ReportPatientPersonnelAvgPerShift graph={'--graph-orange'}/></Col>
         </Row>
 
-        <Row>
-          <Col xs> <ReportPatientNas graph={'--graph-red'}/> </Col>
-          {/* {/* <Col xs><ReportPatientNas graph={'--graph-red'}/></Col>
-          <Col xs><ReportPatientNas graph={'--graph-red'}/></Col> */}
-          <Col xs><ReportPatientNas graph={'--graph-red'}/></Col>
-          <Col xs><ReportPatientNas graph={'--graph-red'}/></Col>
-          <Col xs><ReportPatientNas graph={'--graph-red'}/></Col>
-          <Col xs><ReportPatientNas graph={'--graph-red'}/></Col>
-        </Row>
+
+        
+
+
       </Grid>
 
     {/* <div className="report-Container2"> */}

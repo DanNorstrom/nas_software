@@ -169,7 +169,7 @@ function ReportPatientNas(props) {
                     />
                 {/* submit button */}
                 <span>
-                    <button type="submit" >Get Date's NAS</button>
+                    <button className="button-sub" type="submit" >Get</button>
                 </span>
                 </form>
             </div>

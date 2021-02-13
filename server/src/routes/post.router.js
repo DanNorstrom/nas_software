@@ -117,7 +117,9 @@ postRouter.post("/stage2/", (req, res, next) => {
   console.log("WE ARE TRYING TO POST TO STAGE2 FROM CLIENT");
 
   let newPost = { 
-    PERSONNEL_COUNT: req.body.PERSONNEL_COUNT,
+    Personnel_D: req.body.Personnel_D,
+    Personnel_A: req.body.Personnel_A,
+    Personnel_N: req.body.Personnel_N,
     DATE: req.body.DATE
 
   };
