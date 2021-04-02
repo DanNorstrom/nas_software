@@ -85,6 +85,12 @@
   color: white;
 }
 
+.spanbox {
+  /* float: left; */
+  /* font-family: Helvetica, Arial, sans-serif; */
+  font-size: 15pt;
+}
+
 .bigCheckbox { 
   transform : scale(5); 
 } 
@@ -345,6 +351,7 @@
 }
 
 .dashboard-item {
+  height: 24em;
   margin-top: 15px;
 
   background-color: var(--itembackground);
@@ -361,13 +368,23 @@
 }
 
 .dashboard-item-graph {
-  height: 15em;
-  margin-top: 10px;
-  margin-bottom: 10px;
+  height: 21em;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+.dashboard-item-graph-top {
+  height: 19em;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 15px;
+  padding-right: 15px;
 }
 
 .dashboard-item-bottom {
-  height: 2em;
+  height: 1em;
   margin-bottom: 5px;
 }
 
@@ -409,6 +426,18 @@
  * {
   box-sizing: border-box;
 }
+
+
+/* ::-webkit-datetime-edit { padding: 1em; }
+::-webkit-datetime-edit-fields-wrapper { background: silver; }
+::-webkit-datetime-edit-text { color: red; padding: 0 0.3em; }
+::-webkit-datetime-edit-month-field { color: blue; }
+::-webkit-datetime-edit-day-field { color: green; }
+::-webkit-datetime-edit-year-field { color: purple; }
+::-webkit-inner-spin-button { display: none; }
+::-webkit-calendar-picker-indicator { background: orange; } */
+
+
 
 /* #################################### */
 /* #########  end of new design ####### */

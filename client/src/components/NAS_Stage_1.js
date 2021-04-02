@@ -47,14 +47,61 @@ function NAS_STAGE_1() {
     BA23: false
   });
 
+    // async?
     function handleChange(evt) {
-      const value =
-        evt.target.type === "checkbox" ? evt.target.checked : evt.target.value;
-      setState({
-        ...state,
-        [evt.target.name]: value
-      });
+
+      // act as radio instead of checkbox (we cant use radio bc we want to keep all the data in the JSON format)
+      const letterList = ['A','B','C']
+      var resList = {}
+
+      // is a simulated "radio" type checkbox
+      if (letterList.includes((evt.target.name).slice(-1))) {
+        // ask god why this iterates over indexes instead of obj's
+        for (var s in letterList){
+          var target_var = (evt.target.name).substring(0, (evt.target.name).length-1)
+          target_var  += letterList[s]
+
+          // uncheck other boxes and reset state value
+          if (target_var != [evt.target.name]){
+            // uncheck other boxes
+            document.querySelectorAll("input[name="+target_var+"]")[0].checked = false;
+            // set false for other boxes
+            resList[target_var] = false
+  
+          }
+          // 
+          else{
+            console.log('yes')
+            // check if the checkbox is checked or unchecked
+            const value = evt.target.type === "checkbox" ? evt.target.checked : evt.target.value;
+            // check true or false depending on checked state
+            resList[evt.target.name] = value
+
+          }
+        }
+        // we cant set state inside the ifelse loop, we move it out
+        setState({
+              ...state,...resList
+            });
+      }
+      // is anything else then a simulated radio checkbox
+      else{
+        const value = evt.target.type === "checkbox" ? evt.target.checked : evt.target.value;
+        setState({
+          ...state,
+          [evt.target.name]: value
+        });
+      }
+
+      // assign the checked value to true
+      // const value =
+      //   evt.target.type === "checkbox" ? evt.target.checked : evt.target.value;
+      // setState({
+      //   ...state,
+      //   [evt.target.name]: value
+      // });
     }
+    
 
 
     function formSubmit(evt) {
@@ -69,11 +116,38 @@ function NAS_STAGE_1() {
     };
 
     fetch('http://localhost:8080/posts/stage1/', requestOptions)
-        //.then(response => response.json())
-        //.then(data => this.setState({ postId: data.id }));
+    .then(response => response.json())
+    .then(response => {
+      if (response.success){
+        alert(   
+          'Success: '+response.success +'\n\n'
+        +'Message:\n'+ response.message);
+      }
+      else{
+        alert(   
+          'Success: '+response.success +'\n\n'
+        +'Error:\n'+ response.error + '\n\n'
+        +'Message:\n'+ response.message);
+      }
+    })
+    
 
-      console.log(state)
     }
+    // .then(response => {
+    //   console.log(response)
+    //   if(!response.success) throw new Error(response);
+    //     else return response.json();
+    //   })
+
+    // .then((data) => {
+    //   alert(data.response)
+    // })
+    
+    // .catch((error) => {
+    //   alert(   
+    //      'Success '+error.success +'\n'
+    //     +'Error:'+ error.error + '\n'
+    //     +'Message:'+ error.message);
 
     return (
       <div className="app" >
@@ -91,6 +165,7 @@ function NAS_STAGE_1() {
               value={state.PATIENT_ID}
               onChange={handleChange}
               placeholder="Patient ID"
+              required
             />
         </div>
 
@@ -117,6 +192,7 @@ function NAS_STAGE_1() {
               value={state.ROOM_NR}
               onChange={handleChange}
               placeholder="Room Number"
+              required
             />
             </div>
 
@@ -145,6 +221,7 @@ function NAS_STAGE_1() {
               name="DATE"
               value={state.DATE}
               onChange={handleChange}
+              required
             />
           </div>
 
@@ -176,6 +253,7 @@ function NAS_STAGE_1() {
               max="24:00"
               value={state.TIME_IN}
               onChange={handleChange}
+              required
             />
         </div>
         <div class="form-TextInput">
@@ -185,6 +263,7 @@ function NAS_STAGE_1() {
               //placeholder="Time out HH:MM 24h"
               value={state.TIME_OUT}
               onChange={handleChange}
+              required
             />
         </div>
 
@@ -214,8 +293,12 @@ function NAS_STAGE_1() {
 
           <div class="grid-CheckBoxContainer">
             <div className="heading">
-              <span>
-                Hourly Vital signs, regular registration and calculation of fluid balance
+              <span class="spanbox">
+              <b>Hourly vital signs, regular registration and calculation of fluid balance</b>
+              <br></br><br></br>
+<a>Patients who require NORMAL monitoring, according to the ICU routine, of vital signs, application of assessment scales (pain, RASS,
+Glasgow), water balance control (including nasogastric and nasoenteral tubes) and who do not need frequent alterations in treatment,
+therapy or monitoring intensification. Assisted oral feeding.</a>
               </span>
             </div>
             <div class="CheckBoxContainer">
@@ -234,10 +317,17 @@ function NAS_STAGE_1() {
 
           <div class="grid-CheckBoxContainer">
             <div className="heading">
-              <span>
-                Present at bedside and continuous observation or active 2 hrs or more in any shift, for reasons of safety, severity, or therapy such as noninvasive mechanical ventilation,
-                weaning procedures, restlessness, mental disorientation, prone position, donation procedures,
-                preparation and administration of fluids or medication, assisting specific procedures. 
+            <span class="spanbox">
+              <b>Present at bedside and continuous observation or active for 2 hours or more in any shift, for reasons of safety, severity or therapy,
+such as: non-invasive mechanical ventilation, weaning procedures, restlessness, mental disorientation, prone position, donation
+procedures, preparation and administration of fluids and/or medication, assisting specific procedures.</b>
+              <br></br><br></br>
+              <a>Patients who require intensified monitoring (MORE THAN NORMAL) due to alterations in the clinical condition, hemodynamic instability,
+oliguria, bleeding, dyspnea, fever, alteration in the level of consciousness, measurements in the assessment scales higher than the ICU standard,
+measurement of central venous pressure, invasive arterial pressure, intra-abdominal pressure, use of sedatives or long-term use of insulin, ventilator
+support, non-invasive mechanical ventilation or alteration of the ventilator parameters, preparation of fluids and emergency medication. Patient
+is stable after the therapeutic behavior adopted. Immediate post-operative care after cardiac surgery or major surgery, where the patient remains
+stable. Invasive procedures with intercurrences. Extubation without intercurrences. Assisted oral feeding that demands more time than normal.</a>
               </span>
             </div>
             <div class="CheckBoxContainer">
@@ -256,8 +346,13 @@ function NAS_STAGE_1() {
 
           <div class="grid-CheckBoxContainer">
             <div className="heading">
-              <span>
-                Hourly Vital signs, regular registration and calculation of fluid balance
+            <span class="spanbox">
+              <b>Present at bedside and active for 4 hours or more in any shift for reasons of safety, severity or therapy, such as those examples above (1b).</b>
+              <br></br><br></br>
+              <a>Critical patients who require MUCH MORE THAN NORMAL monitoring, in at least one shift in 24 hours, without stabilization after the
+therapeutic interventions adopted, requires continuous nursing presence. Alterations described in the “MORE THAN NORMAL” category,
+however with a greater frequency and the need for interventions. Hemodialysis with intercurrence, requiring nursing intervention (when
+hemodialysis is performed by ICU staff). Unstable patients in immediate postoperative care after cardiac surgery or major surgery.</a>
               </span>
             </div>
             <div class="CheckBoxContainer">
@@ -278,8 +373,12 @@ function NAS_STAGE_1() {
 
           <div class="grid-CheckBoxContainer">
             <div className="heading">
-              <span>
-                Laboratory, biochemical and microbiological investigations
+            <span class="spanbox">
+              <b>LABORATORY: Biochemical and microbiological investigations.</b>
+              <br></br><br></br>
+              <a>Patients submitted to any biochemical or microbiological exam, regardless of the quantity, performed at bedside by a nursing professional,
+including capillary glucose. E.g.: HGT, glycosuria, tracing cultures, blood gas analysis, among others. This item should not be scored if the
+laboratory collector or physician performs the collection.</a>
               </span>
             </div>
             <div class="CheckBoxContainer">
@@ -297,8 +396,10 @@ function NAS_STAGE_1() {
 
           <div class="grid-CheckBoxContainer">
             <div className="heading">
-              <span>
-                Medication, vasoactive drugs excluded
+            <span class="spanbox">
+              <b>MEDICATION: Vasoactive drugs excluded.</b>
+              <br></br><br></br>
+              <a>Patients who received any type of medication, regardless of the route and dose. Vasoactive drugs will be scored in a specific item (item 12).</a>
               </span>
             </div>
             <div class="CheckBoxContainer">
@@ -324,8 +425,12 @@ function NAS_STAGE_1() {
 
           <div class="grid-CheckBoxContainer">
             <div className="heading">
-              <span>
-                Performing hygiene procedues such as dressing of wounds and intravascular catheters, changing linen, washing patient, incontinence,vomiting, burns, leaking wounds, complex surgical dressing with irrigation, and special procedures (e.g. barrier nursing, cross-infection related, room cleaning following instructions, staff hygiene)
+            <span class="spanbox">
+              <b>HYGIENE PROCEDURES</b>
+              <br></br><br></br>
+              <a>Performing hygiene procedures such as: dressing of wounds and intravascular catheters, changing linen, washing patient, incontinence,
+vomiting, burns, leaking wounds, complex surgical dressing with irrigation, special procedures (e.g. barrier nursing, cross-infection
+related, room cleaning following infections, staff hygiene) and especially obese patients, etc.</a>
               </span>
             </div>
             <div class="CheckBoxContainer">
@@ -343,8 +448,13 @@ function NAS_STAGE_1() {
 
           <div class="grid-CheckBoxContainer">
             <div className="heading">
-              <span>
-                The performance of hygiene procedures took 2 hrs in and shift
+            <span class="spanbox">
+              <b>The performance of hygiene procedures took more than 2 hours in any shift.</b>
+              <br></br><br></br>
+              <a>Patients who were submitted, in MORE THAN NORMAL frequency, to one of the hygiene procedures mentioned above in at least one shift
+in 24 hours. Vascular catheter dressing twice a day; medium dressing for pressure ulcer, dressing a surgical incision twice a day, medium
+dressing (with suture dehiscence); changing linen twice in 24h; washing of unstable patients by three professionals; body hygiene twice per
+shift. Fecal incontinence three times a day. Patients in isolation.</a>
               </span>
             </div>
             <div class="CheckBoxContainer">
@@ -362,8 +472,12 @@ function NAS_STAGE_1() {
 
           <div class="grid-CheckBoxContainer">
             <div className="heading">
-              <span>
-                The performance of hygiene procedures took 4 hrs in and shift
+            <span class="spanbox">
+              <b>The performance of hygiene procedures took more than 4 hours in any shift.</b>
+              <br></br><br></br>
+              <a>4c The performance of hygiene procedures took more than 4 hours in any shift.
+Patients who were submitted, in MUCH MORE THAN NORMAL frequency, to one of the hygiene procedures mentioned above in at least
+one shift in 24 hours. Extensive, complex, open cavity dressing or ≥three times a day.</a>
               </span>
             </div>
             <div class="CheckBoxContainer">
@@ -382,8 +496,12 @@ function NAS_STAGE_1() {
 
           <div class="grid-CheckBoxContainer">
             <div className="heading">
-              <span>
-                Care of drains, all (except gastric tube)
+            <span class="spanbox">
+              <b>CARE OF DRAINS - All (except gastric tube).</b>
+              <br></br><br></br>
+              <a>Patients with any type of drain or tube with the aim of draining. Including long-term catheter, external ventricular drain (EVD), thorax
+drain, among others. EXCLUDING gastric tubes (nasogastric, nasoenteral, gastrostomies and others), which should be considered in
+item 1 or 21.</a>
               </span>
             </div>
             <div class="CheckBoxContainer">
@@ -410,8 +528,10 @@ function NAS_STAGE_1() {
           
           <div class="grid-CheckBoxContainer">
             <div className="heading">
-              <span>
-               Performing procedure(s) up to three times per 24 hrs
+            <span class="spanbox">
+              <b>MOBILIZATION AND POSITIONING</b>
+              <br></br><br></br>
+              <a>Patients who require mobilization and positioning up to three times in 24 hours.</a>
               </span>
             </div>
             <div class="CheckBoxContainer">
@@ -429,8 +549,11 @@ function NAS_STAGE_1() {
 
           <div class="grid-CheckBoxContainer">
             <div className="heading">
-              <span>
-               Performing procedure(s) more frequently than three times per 24 hrs, or with two nurses, any frequency
+            <span class="spanbox">
+              <b>Performing procedures(s) more frequently than 3 times per 24 hours, or with 2 nurses – any frequency.</b>
+              <br></br><br></br>
+              <a>Patients who require mobilization and positioning, as described in item 6, which have been performed more than three times in 24 hours or
+by two members of the nursing staff in at least one shift in 24 hours.</a>
               </span>
             </div>
             <div class="CheckBoxContainer">
@@ -448,8 +571,11 @@ function NAS_STAGE_1() {
 
           <div class="grid-CheckBoxContainer">
             <div className="heading">
-              <span>
-               Performing procedure with three or more nurses, any frequency
+            <span class="spanbox">
+              <b>Performing procedure with three or more nurses – any frequency.</b>
+              <br></br><br></br>
+              <a>Complex mobilization and positioning as per the procedure described in item 6, which have been performed by three or more members of
+the nursing staff, in any frequency, in at least one of the shifts in 24 hours.</a>
               </span>
             </div>
             <div class="CheckBoxContainer">
@@ -476,8 +602,12 @@ function NAS_STAGE_1() {
         
         <div class="grid-CheckBoxContainer">
             <div className="heading">
-              <span>
-               Support and care of either relatives or patient requiring full dedication for about 1 hrs in any shift such as to explain clinical condition, dealing with pain and distress, difficult family circumstances
+            <span class="spanbox">
+              <b>SUPPORT AND CARE OF RELATIVES AND PATIENT</b>
+              <br></br><br></br>
+              <a>Including procedures such as telephone calls, interviews, counseling. Often, the support and care of either relatives or patient allow staff to
+continue with other nursing activities (e.g.: communication with patients during hygiene procedures, communication with relatives whilst
+present at bedside and observing patient).</a>
               </span>
             </div>
             <div class="CheckBoxContainer">
@@ -495,8 +625,13 @@ function NAS_STAGE_1() {
 
           <div class="grid-CheckBoxContainer">
             <div className="heading">
-              <span>
-               Support and care of either relatives or patient requiring full dedication for 3 hrs or more in any such shift such as death, demanding circumstances (e.g., large number of relatives, language problems, hostile relatives)
+            <span class="spanbox">
+              <b>Support and care of either relatives or patient requiring full dedication for about one hour in any shift such as: to explain clinical
+condition, dealing with pain and distress, difficult family circumstances.
+              </b>
+              <br></br><br></br>
+              <a>This item receives a score when guidance or instructions are given to patients and/or their families, providing emotional support with full
+dedication of a nurse from the staff, with NORMAL duration, according to the routine established in the unit, in at least one shift in 24 hours.</a>
               </span>
             </div>
             <div class="CheckBoxContainer">
@@ -522,8 +657,11 @@ function NAS_STAGE_1() {
 
           <div class="grid-CheckBoxContainer">
             <div className="heading">
-              <span>
-               Performing routine tasks such as processing of clinical data, ordering examinations, professional exchange of information (e.g., ward rounds)
+            <span class="spanbox">
+              <b>Performing routine tasks such as: processing of clinical data, ordering examinations, professional exchange of information (e.g.: ward rounds).</b>
+              <br></br><br></br>
+              <a>Including records performed as nursing process and/or shift change, multidisciplinary rounds or administrative and managerial tasks related
+to patients, with NORMAL duration.</a>
               </span>
             </div>
             <div class="CheckBoxContainer">
@@ -541,8 +679,15 @@ function NAS_STAGE_1() {
 
           <div class="grid-CheckBoxContainer">
             <div className="heading">
-              <span>
-               Performing administrative and managerial tasks requiring full dedication for about 2 hrs in any shift such as research activities, protocols in use, admission and discharge procedures
+            <span class="spanbox">
+              <b>Performing administrative and managerial tasks requiring full dedication for about 2 hours in any shift such as: research activities,
+protocols in use, admission and discharge procedures.</b>
+              <br></br><br></br>
+              <a>Including records performed as part of nursing process and/or shift change, multidisciplinary rounds or administrative and managerial
+tasks related to patients, with MORE THAN NORMAL duration. Admission of patients in immediate postoperative period, unstable patients
+who require more extensive records. Need for providing materials and equipment. Assembly of the hemodialysis machine, application of
+protocols such as ECLS, transplantation, others. When the nurse needs help from a colleague to perform his/her activities. E.g.: the nurse
+continues assisting a patient and a colleague takes over the administrative tasks.</a>
               </span>
             </div>
             <div class="CheckBoxContainer">
@@ -560,8 +705,14 @@ function NAS_STAGE_1() {
 
           <div class="grid-CheckBoxContainer">
             <div className="heading">
-              <span>
-               Performing administrative and managerial tasks requiring full dedication for about 4 hrs or more of the time in any shift as death and organ donation procedures, coordination with other disciplines
+            <span class="spanbox">
+              <b>Performing administrative and managerial tasks requiring full dedication for about 4 hours or more of the time in any shift such as:
+death and organ donation procedures, co-ordination with other disciplines.</b>
+              <br></br><br></br>
+              <a>Including any administrative and managerial task related to the patient, with MUCH MORE THAN NORMAL duration, according to the
+routine established in the unit. Critical, unstable patients who require intense records. Detailed shift change records, multidisciplinary
+rounds, organization of special materials and equipment for patient care, surgical procedures at bedside, protocols such as transplantation,
+ECLS, ventricular assist devices, teaching and supervising education/training.</a>
               </span>
             </div>
             <div class="CheckBoxContainer">
@@ -589,8 +740,12 @@ function NAS_STAGE_1() {
 
           <div class="grid-CheckBoxContainer">
             <div className="heading">
-              <span>
-               Respiratory support: any form of mechanical ventilation/assisted ventilation with or without positive end-expiratory pressure, with or without muscle relaxants, spontaneous breathing with or without positive end-expiratory pressure with or without endotracheal tube supplementary oxygen by any method 
+            <span class="spanbox">
+              <b>Respiratory support: Any form of mechanical ventilation/assisted ventilation with or without positive end-expiratory pressure,
+with or without muscle relaxants; spontaneous breathing with positive end-expiratory pressure (e.g. CPAP or BiPAP), with or without
+endotracheal tube; supplementary oxygen by any method.</b>
+              <br></br><br></br>
+              <a>Patients making use of any respiratory support, from nasal catheter to mechanical ventilation.</a>
               </span>
             </div>
             <div class="CheckBoxContainer">
@@ -608,8 +763,9 @@ function NAS_STAGE_1() {
 
           <div class="grid-CheckBoxContainer">
             <div className="heading">
-              <span>
-               Care of artificial airways: endotracheal tube or tracheostomy cannula
+            <span class="spanbox">
+              Care of artificial airways. Endotracheal tube or tracheostomy cannula.
+Patients making use of orotracheal or nasotracheal tube or tracheostomy.
               </span>
             </div>
             <div class="CheckBoxContainer">
@@ -627,8 +783,11 @@ function NAS_STAGE_1() {
 
           <div class="grid-CheckBoxContainer">
             <div className="heading">
-              <span>
-               Treatment for improving lung function: thorax physiotherapy, incentive spirometry, inhalation therapy, intratracheal suctioning
+            <span class="spanbox">
+              <b>Treatment for improving lung function. Lung physiotherapy, incentive spirometry, inhalation therapy, intratracheal suctioning.</b>
+              <br></br><br></br>
+            <a>Patients who underwent treatment to improve their pulmonary function, performed in any frequency by the nursing staff. Aspiration with
+open or closed system and nebulization.</a>
               </span>
             </div>
             <div class="CheckBoxContainer">
@@ -656,8 +815,13 @@ function NAS_STAGE_1() {
 
           <div class="grid-CheckBoxContainer">
             <div className="heading">
-              <span>
-               Vasoactive medication, disregard type and dose
+            <span class="spanbox">
+              <b>Vasoactive medication, irrespective of type or dose.</b>
+              <br></br><br></br>
+              <a>
+Patients who have received any vasoactive medication, regardless of the type and dose and who need intensive monitoring in their
+endovenous use: Sodium Nitroprusside, Vasopressin, Prostaglandin, Norepinephrine, Epinephrine, Dopamine, Dopexamine, Dobutamine,
+Isoproterenol, Phenylephrine, Nitroglycerin, Clonidin hydrochloride. Metoprolol and Propranolol (beta blockers) should be scored.</a>
               </span>
             </div>
             <div class="CheckBoxContainer">
@@ -675,8 +839,13 @@ function NAS_STAGE_1() {
 
           <div class="grid-CheckBoxContainer">
             <div className="heading">
-              <span>
-               Intravenous replacement of large fluid losses. Fluid administration 3 L/m2/day, irrespective of type of fluid administrated
+            <span class="spanbox">
+              <b>Intravenous replacement of large fluid losses. Fluid administration 3 l/m2/day, irrespective of type of fluid administered. 
+              </b>
+              <br></br><br></br>
+              <a>
+              Patients who have received fluid replacement greater than 4.5 liters of solution per day, irrespective of the type of fluid administered.
+              </a>
               </span>
             </div>
             <div class="CheckBoxContainer">
@@ -694,9 +863,12 @@ function NAS_STAGE_1() {
 
           <div class="grid-CheckBoxContainer">
             <div className="heading">
-              <span>
-               Left atrium monitoring: pulmonary artery catheter with or without cardiac output measurement
-              </span>
+            <span class="spanbox">
+              <b>Left atrium monitoring. Pulmonary artery catheter with or without cardiac output measurement.</b>
+              <br></br><br></br>
+              
+<a>Patients making use of pulmonary artery catheter (Swan-Ganz catheter). Including the use of cardiac pacemaker, intra-aortic balloon
+pumping, cardiac output monitoring, extracorporeal life support (ECLS), ventricular assist devices.</a>              </span>
             </div>
             <div class="CheckBoxContainer">
             <label>           
@@ -713,8 +885,12 @@ function NAS_STAGE_1() {
 
           <div class="grid-CheckBoxContainer">
             <div className="heading">
-              <span>
-               Cardiopulmonary resuscitation after arrest, in the past period of 24 hrs (single precordial thump not included)
+            <span class="spanbox">
+              <b>Cardiopulmonary resuscitation after arrest; in the past 24 hours (single precordial thump not included).</b>
+              <br></br><br></br>
+              <a>
+Patients who suffered a heart problems and were submitted to cardiopulmonary resuscitation, independently of the environment where the
+cardiac arrest took place. This item should be scored only once in 24 hours.</a>
               </span>
             </div>
             <div class="CheckBoxContainer">
@@ -741,8 +917,11 @@ function NAS_STAGE_1() {
 
           <div class="grid-CheckBoxContainer">
             <div className="heading">
-              <span>
-               Hemofiltration techniques, dialysis techniques
+            <span class="spanbox">
+              <b>Hemofiltration techniques. Dialysis techniques.</b>
+              <br></br><br></br>
+              <a>
+Patients who have received any type of intermittent or continuous dialytic procedure.</a>
               </span>
             </div>
             <div class="CheckBoxContainer">
@@ -760,8 +939,12 @@ function NAS_STAGE_1() {
 
           <div class="grid-CheckBoxContainer">
             <div className="heading">
-              <span>
-               Quantitative urine output measurement (e.g., by indwelling urinary catheter)
+            <span class="spanbox">
+              <b>Qantitative urine output measurement (e.g.: by indwelling urinary catheter).</b>
+              <br></br><br></br>
+              <a>
+              Patients who require diuresis control, in milliliters, with or without any type of urinary device
+              </a>
               </span>
             </div>
             <div class="CheckBoxContainer">
@@ -788,8 +971,12 @@ function NAS_STAGE_1() {
 
           <div class="grid-CheckBoxContainer">
             <div className="heading">
-              <span>
-               Measurement of intracranial pressure
+            <span class="spanbox">
+              <b>Measurement of intracranial pressure.</b>
+              <br></br><br></br>
+              <a>
+Patients submitted to intracranial pressure monitoring, jugular bulb catheter or microdialysis. Do consider this item if the patient has
+external ventricular drainage and assessment of ICP.</a>
               </span>
             </div>
             <div class="CheckBoxContainer">
@@ -816,8 +1003,14 @@ function NAS_STAGE_1() {
 
           <div class="grid-CheckBoxContainer">
             <div className="heading">
-              <span>
-               Treatment of complicated metabolic acidosis/alkalosis
+            <span class="spanbox">
+              <b>Treatment of complicated metabolic acidosis/alkalosis.</b>
+              <br></br><br></br>
+              <a>Patients who made use of specific medication to adjust metabolic acidosis or alkalosis, such as administration of sodium bicarbonate
+in continuous or bolus infusion. Respiratory acidosis and alkalosis should not be scored in this item, neither should ventilator
+correction. The item considers those conditions requiring the permanent presence of a nurse for monitoring severe physiological
+deregulation and for titrating (fine-tuning) the therapy in acute conditions. During hemofiltr ation, if correction is necessary,
+additional score is indicated.</a>
               </span>
             </div>
             <div class="CheckBoxContainer">
@@ -835,8 +1028,10 @@ function NAS_STAGE_1() {
 
           <div class="grid-CheckBoxContainer">
             <div className="heading">
-              <span>
-               Intravenous hyperalimentation
+            <span class="spanbox">
+              <b>Intravenous hyperalimentation.</b>
+              <br></br><br></br>
+              <a>Patients who receive central or peripheral venous infusion of parenteral nutrition.</a>
               </span>
             </div>
             <div class="CheckBoxContainer">
@@ -854,9 +1049,10 @@ function NAS_STAGE_1() {
 
           <div class="grid-CheckBoxContainer">
             <div className="heading">
-              <span>
-               Enteral feeding through gastric tube or other gastrointestinal route (e.g., jejunostomy)
-
+            <span class="spanbox">
+              <b>Enteral feeding. Through gastric tube or other gastrointestinal route (e.g., jejunostomy).</b>
+              <br></br><br></br>
+              <a>Patients who receive enteral feeding through tubes, by any route of the gastrointestinal tract. Measurement of aspiration/retention included.</a>
               </span>
             </div>
             <div class="CheckBoxContainer">
@@ -883,8 +1079,17 @@ function NAS_STAGE_1() {
 
           <div class="grid-CheckBoxContainer">
             <div className="heading">
-              <span>
-               Specific intervention(s) in the intensive care unit: endotracheal intubation, insertion of pacemaker, cardioversion, endoscopies, emergency surgery in the previous 24 hrs, gastric lavage; routine interventions without direct consequences to the clinical condition of the patient, such as: radiographs, echography, electrocardiogram, dressings, or insertion of venous or arterial catheters, are not included
+            <span class="spanbox">
+              <b>Specific intervention(s) in the intensi ve care unit. Endotracheal intubation, insertion of pacemaker, cardioversion,
+endoscopies, emergency surgery in the past 24 hours, gastric la vage. Routine interventions without direct consequences for
+the clinical condition of the patient, such as: X-rays, echography, electrocardiogram, dressing, or insertion of venous or arterial
+catheters, are not included.</b>
+              <br></br><br></br>
+              <a>Patients submitted to a diagnostic or therapeutic intervention listed above in the ICU. Specific procedures performed in the unit and which
+require active intervention of the staff can be considered in this item, including the insertion of venous or arterial catheters and spinal
+puncture. Procedures performed by the nurse, such as passing a relief or indwelling urinary catheter, a nasoenteral or gastric tube, a
+peripherally inserted central catheter (PICC), installation of intra-abdominal pressure, among others, that might be particular complex and
+require more nursing time for their execution can also be considered.</a>
               </span>
             </div>
             <div class="CheckBoxContainer">
@@ -902,8 +1107,12 @@ function NAS_STAGE_1() {
 
           <div class="grid-CheckBoxContainer">
             <div className="heading">
-              <span>
-               Specific interventions outside the intensive care unit: surgery or diagnostic procedures
+            <span class="spanbox">
+              <b>Specific interventions outside the intensive care unit. Surgery or diagnostic procedures.</b>
+              <br></br><br></br>
+              <a>Patients who require diagnostic or therapeutic interventions performed outside the ICU. E.g.: tomography, radionuclide imaging, magnetic
+resonance, hemodynamics (take or pick up a patient), surgical procedures (take or pick up a patient), patient transfer to any hospitalization
+unit or discharge, and sending the body to the morgue.</a>
               </span>
             </div>
             <div class="CheckBoxContainer">

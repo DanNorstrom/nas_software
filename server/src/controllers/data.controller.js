@@ -439,13 +439,13 @@ exports.Personnel_count = (req, res, next) => {
 exports.ReportPatientPersonnelAvgPerShift = (req, res, next) => {
 
     // anonymous asyn method to aforce async behavior with multiple synchornious parts.
-    (async () => {
+ 
 
-    // save data struct
+    // merge data struct
     var patient_map = new Map() // Keys are dates, values are avg patient NAS/shift
     var personnel_map = new Map()
 
-    //data structs
+    // sort data structs
     let patient_date_nas = []
     let personnel_date_nas = []
 
@@ -454,8 +454,9 @@ exports.ReportPatientPersonnelAvgPerShift = (req, res, next) => {
 
 
     // code couses synchrounous behavior, we wait for it finish.
-    const promiseEnd = await Promise.all([
+    Promise.all([
         
+        // TODO: sometimes STAGE_1.find() fires to slow and data is sent before its updated
         STAGE_1.find({
             DATE: {
                 "$gte":req.params.DATE1,    //greaterOrEqual
@@ -467,12 +468,12 @@ exports.ReportPatientPersonnelAvgPerShift = (req, res, next) => {
                     'success': false,
                     'error': err.message
                 });
-                console.log("error: broken DB call")
                 return; //break if error
             }
 
             //get patient avg/day
             var patient_nas_payload = result_date_to_daily_patient_nas_collection(result)
+
 
             // get data -> map, merge on date
             // date objcet is uncomparable, turn them into integers.
@@ -487,14 +488,14 @@ exports.ReportPatientPersonnelAvgPerShift = (req, res, next) => {
             });
 
             // sort data
-            sorted_patient_date_nas = patient_date_nas.sort((a, b) => a.DATE - b.DATE)
-  
+            patient_date_nas.sort((a, b) => a.DATE - b.DATE)
+            console.log("fire 1") 
         }),
 
 
         STAGE_2.find({
             DATE: {
-                "$gte":req.params.DATE1,    //greaterOrEqual
+                "$gte":req.params.DATE1,   //greaterOrEqual
                 "$lte":req.params.DATE2}   //lesserOrEqual
             },
             function(err, result){
@@ -517,50 +518,36 @@ exports.ReportPatientPersonnelAvgPerShift = (req, res, next) => {
                 personnel_date_nas.push({"Pe_NAS":(value*100/3), "DATE": key})
             });
 
-            sorted_personnel_date_nas = personnel_date_nas.sort((a, b) => a.DATE - b.DATE)
+            // sort 
+            personnel_date_nas.sort((a, b) => a.DATE - b.DATE)
+            console.log("fire 2")
         })
 
 
-    ]);
+    ]).then(async function(restest){
 
-    // summarize DB data as payload
-    personnel_patient_avgnas_payload = [patient_date_nas,personnel_date_nas]
+        // This gets fired even tought the 2 queries in the Promise.all()
+        // has not been completed. with a short timeout we can acertain that this functions.
+        // This is a quick hack for now, but isn't scalable at all.
+        await new Promise(r => setTimeout(r, 200));
+        
+        console.log(personnel_date_nas)
+        console.log('seperator')
+        console.log(patient_date_nas)
 
-
-    //console.log(patient_date_nas,personnel_date_nas)
-
-    // TODO: our map isnt sorted by dates:
-    //dosent always log patient_data_nas in array, might be promise async issues.
-
-    res.status(200).send({
-        'success': true,
-        'data': personnel_patient_avgnas_payload
-    });
-
-})(); // end async
+        personnel_patient_avgnas_payload = [patient_date_nas,personnel_date_nas]
+        res.status(200).send({
+            'success': true,
+            'data': personnel_patient_avgnas_payload
+        });
+        console.log("fire send")
+        console.log(personnel_patient_avgnas_payload)
+    }).catch(error => {
+        console.error(error.message)
+      });
 
 }
 
 //######################################################################
 //############################## NOTES #################################
 //######################################################################
-
-
-
-
-/* add Date-range to query, format as: we can skip this if me multiQuery our api, not recommended
-{
-    "success": true,
-    "data": [
-        {
-            "PATIENT_ID": "1",
-            "DATE": "2021/01/19",
-            "NAS": 5.5
-        },
-        {
-            "PATIENT_ID": "2",
-            "DATE": "2021/01/19",
-            "NAS": 49.2
-        }
-    ]
-}*/

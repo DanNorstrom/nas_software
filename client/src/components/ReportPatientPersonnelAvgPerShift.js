@@ -33,6 +33,9 @@ function ReportPatientPersonnelAvgPerShift(props) {
             // responsive true
             maintainAspectRatio: false,
             responsive: true,
+            animation: {
+                duration: 2000,
+            },
             legend: {
                 display: true,
                 position: 'top',
@@ -46,7 +49,7 @@ function ReportPatientPersonnelAvgPerShift(props) {
                     {
                     display: true,
                     gridLines: {
-                        display: true,
+                        display: false,
                         color: getComputedStyle(document.documentElement).getPropertyValue(props.graph+'-axiz'),
                         lineWidth:1,
                         zeroLineColor: "transparent"
@@ -54,7 +57,7 @@ function ReportPatientPersonnelAvgPerShift(props) {
                 }],
                 yAxes: [{
                     gridLines: {
-                        display: true,
+                        display: false,
                         color: getComputedStyle(document.documentElement).getPropertyValue(props.graph+'-axiz'),
                         lineWidth:1,
                         zeroLineColor: "transparent"
@@ -92,7 +95,7 @@ function ReportPatientPersonnelAvgPerShift(props) {
 
                 // patients
                 for (const dataObj of json.data[0]) {
-                    apiDate.push( (new Date(dataObj.DATE)).toISOString().split('T')[0].slice(4,7))
+                    apiDate.push( (new Date(dataObj.DATE)).toISOString().split('T')[0].slice(8,))
                     apiPatient.push(parseFloat(dataObj.Pa_NAS))
                 }
 
@@ -101,8 +104,9 @@ function ReportPatientPersonnelAvgPerShift(props) {
                     // apiDate.push(dataObj.DATE)
                     apiPersonnel.push(parseFloat(dataObj.Pe_NAS))
                 }
-                console.log(apiPersonnel)
-                console.log(apiPatient)
+                // console.log(apiPersonnel)
+                // console.log(apiPatient)
+                // console.log(apiDate)
 
                 // sort distinct date values in array
                 // apiDate.filter((date, i, self) => self.findIndex(d => d.getTime() === date.getTime()) === i)
@@ -172,10 +176,10 @@ function ReportPatientPersonnelAvgPerShift(props) {
         <div className="dashboard-item">
 
 
-            <div className="dashboard-item-top">
+            {/* <div className="dashboard-item-top">
                  <a>Personnel & Patient avg nas% / shift <br></br></a>
                 <a>Do we have enough manpower to cover the weight?</a>
-            </div>
+            </div> */}
 
             <div className="dashboard-item-graph">
                 {/* <canvas id="myChart"/> */}

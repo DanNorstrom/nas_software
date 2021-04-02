@@ -33,6 +33,9 @@ function ReportPatientNas(props) {
             // responsive true
             maintainAspectRatio: false,
             responsive: true,
+            animation: {
+                duration: 2000,
+            },
             legend: {
                 display: true,
                 position: 'top',
@@ -149,9 +152,9 @@ function ReportPatientNas(props) {
         <div className="dashboard-item">
 
 
-            <div className="dashboard-item-top">
+            {/* <div className="dashboard-item-top">
                 <a>What NAS numbers where reported today?</a>
-            </div>
+            </div> */}
 
             <div className="dashboard-item-graph">
                 {/* <canvas id="myChart"/> */}

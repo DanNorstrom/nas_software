@@ -35,8 +35,20 @@ function NAS_STAGE_2() {
     };
 
     fetch('http://localhost:8080/posts/stage2/', requestOptions)
-        //.then(response => response.json())
-        //.then(data => this.setState({ postId: data.id }));
+    .then(response => response.json())
+    .then(response => {
+      if (response.success){
+        alert(   
+          'Success: '+response.success +'\n\n'
+        +'Message:\n'+ response.message);
+      }
+      else{
+        alert(   
+          'Success: '+response.success +'\n\n'
+        +'Error:\n'+ response.error + '\n\n'
+        +'Message:\n'+ response.message);
+      }
+    })
 
       console.log(state)
     }

@@ -17,6 +17,7 @@ function ReportPersonnel(props) {
         data: [],
         DATE:  "2021-03-23"//new Date().toLocaleDateString('en-CA') //new Date() --> curent date --> useEffect on load to render first time
     });
+    
     const [chartData,setChartData] = useState(
         {
             datasets: [{
@@ -28,11 +29,16 @@ function ReportPersonnel(props) {
             }]
         }
     )
+
+    // sets initial graphics for graphs before they are populated
     const [chartOptions,setChartOptions] = useState(
         {
             // responsive true
             maintainAspectRatio: false,
             responsive: true,
+            animation: {
+                duration: 2000,
+            },
             legend: {
                 display: true,
                 position: 'top',
@@ -44,7 +50,7 @@ function ReportPersonnel(props) {
             scales: {
                 xAxes: [{
                     gridLines: {
-                        display: true,
+                        display: false,
                         color: getComputedStyle(document.documentElement).getPropertyValue(props.graph+'-axiz'),
                         lineWidth:1,
                         zeroLineColor: "transparent"
@@ -52,7 +58,7 @@ function ReportPersonnel(props) {
                 }],
                 yAxes: [{
                     gridLines: {
-                        display: true,
+                        display: false,
                         color: getComputedStyle(document.documentElement).getPropertyValue(props.graph+'-axiz'),
                         lineWidth:1,
                         zeroLineColor: "transparent"
@@ -151,9 +157,9 @@ function ReportPersonnel(props) {
         <div className="dashboard-item">
 
 
-            <div className="dashboard-item-top">
+            {/* <div className="dashboard-item-top">
                 <a>How many nurses worked at the ICU today?</a>
-            </div>
+            </div> */}
 
             <div className="dashboard-item-graph">
                 {/* <canvas id="myChart"/> */}

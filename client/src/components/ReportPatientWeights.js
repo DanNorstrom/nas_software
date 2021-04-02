@@ -34,6 +34,9 @@ function ReportPatientWeights(props) {
             // responsive true
             maintainAspectRatio: false,
             responsive: true,
+            animation: {
+                duration: 2000,
+            },
             legend: {
                 display: true,
                 position: 'left',
@@ -176,12 +179,15 @@ function ReportPatientWeights(props) {
         <div className="dashboard-item">
 
 
-            <div className="dashboard-item-top">
+            {/* <div className="dashboard-item-top">
                  <a>Patient NAS Weight / Time <br></br></a>
                 <a>How heavy was the patients in the time peroid?</a>
+            </div> */}
+            <div className="dashboard-item-top">
+            <a>Patient NAS Weight / Time <br></br></a>
             </div>
 
-            <div className="dashboard-item-graph">
+            <div className="dashboard-item-graph-top">
                 {/* <canvas id="myChart"/> */}
                 <Doughnut data={chartData} options={chartOptions}/>
             </div>
