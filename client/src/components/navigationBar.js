@@ -15,7 +15,7 @@ const Navbar = () => {
           <button className="navbarbutton"><h1>Personnel Reg.</h1></button>
         </NavLink>
 
-        <NavLink to="/CheckData">
+        <NavLink to="/PeerView">
           <button className="navbarbutton"><h1>Data Validation</h1></button>
         </NavLink>
 

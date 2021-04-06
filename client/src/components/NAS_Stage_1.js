@@ -64,9 +64,14 @@ function NAS_STAGE_1() {
           // uncheck other boxes and reset state value
           if (target_var != [evt.target.name]){
             // uncheck other boxes
-            document.querySelectorAll("input[name="+target_var+"]")[0].checked = false;
-            // set false for other boxes
-            resList[target_var] = false
+            try{
+              document.querySelectorAll("input[name="+target_var+"]")[0].checked = false;
+              // set false for other boxes
+              resList[target_var] = false
+            }
+            catch(err) {
+              // no action required as this data dosent exist
+            }
   
           }
           // 

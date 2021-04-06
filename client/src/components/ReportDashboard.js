@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 
-import ReportJSON from "./ReportJSON"
-
 // custom dashboard components
 import ReportPatientNas from "./ReportPatientNas"
 import ReportPatientWeights from "./ReportPatientWeights"

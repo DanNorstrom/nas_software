@@ -29,6 +29,21 @@ postRouter.get('/stage1raw/', (req, res, next) => {
     });
 });
 
+postRouter.get('/stage2raw/', (req, res, next) => {
+  STAGE_2.find({} , function(err, result){
+      if(err){
+          res.status(400).send({
+              'success': false,
+              'error': err.message
+          });
+      }
+      res.status(200).send({
+          'success': true,
+          'data': result
+      });
+  });
+});
+
 /* Get Single Post */
 postRouter.get("/:post_id", (req, res, next) => {
     STAGE_1.findById(req.params.post_id, function (err, result) {
@@ -50,7 +65,7 @@ postRouter.get("/:post_id", (req, res, next) => {
 /* Add Single Post to stage1 DB*/
 postRouter.post("/stage1/", (req, res, next) => {
 
-  console.log("WE ARE TRYING TO POST TO STAGE1 FROM CLIENT");
+  // console.log("WE ARE TRYING TO POST TO STAGE1 FROM CLIENT");
 
   let newPost = { 
     PATIENT_ID: req.body.PATIENT_ID,
@@ -111,18 +126,87 @@ postRouter.post("/stage1/", (req, res, next) => {
   });
 });
 
+
+postRouter.post("/modifyStage1/", (req, res, next) => {
+
+  bulkUpdateOperations = []
+
+  for (const dataObj of req.body) {
+    bulkUpdateOperations.push({
+      'replaceOne': {
+        'filter': {'_id': dataObj._id},
+        'replacement': dataObj
+      }
+    });
+  }
+
+  STAGE_1.bulkWrite(bulkUpdateOperations, function(err, result) {
+  // STAGE_1.findByIdAndUpdate
+  // STAGE_1.create( req.body, function(err, result) {
+    console.log(err)
+    console.log(result)
+    if(err){
+      res.status(400).send({
+        success: false,
+        error: err.message,
+        message: "posts not updated"
+      });
+      return; // dont run other code after error
+  }
+    res.status(201).send({
+      success: true,
+      data: result,
+      message: "Posts updated successfully"
+    });
+  });
+});
+
+postRouter.post("/modifyStage2/", (req, res, next) => {
+
+  bulkUpdateOperations = []
+
+  for (const dataObj of req.body) {
+    bulkUpdateOperations.push({
+      'replaceOne': {
+        'filter': {'_id': dataObj._id},
+        'replacement': dataObj
+      }
+    });
+  }
+
+  STAGE_2.bulkWrite(bulkUpdateOperations, function(err, result) {
+  // STAGE_1.findByIdAndUpdate
+  // STAGE_1.create( req.body, function(err, result) {
+    console.log(err)
+    console.log(result)
+    if(err){
+      res.status(400).send({
+        success: false,
+        error: err.message,
+        message: "posts not updated"
+      });
+      return; // dont run other code after error
+  }
+    res.status(201).send({
+      success: true,
+      data: result,
+      message: "Posts updated successfully"
+    });
+  });
+});
+
 /* Add Single Post to stage2 DB*/
 postRouter.post("/stage2/", (req, res, next) => {
 
-  console.log("WE ARE TRYING TO POST TO STAGE2 FROM CLIENT");
+  // console.log("WE ARE TRYING TO POST TO STAGE2 FROM CLIENT");
 
   let newPost = { 
     Personnel_D: req.body.Personnel_D,
     Personnel_A: req.body.Personnel_A,
     Personnel_N: req.body.Personnel_N,
     DATE: req.body.DATE
-
   };
+  
    STAGE_2.create(newPost, function(err, result) {
     if(err){
       res.status(400).send({

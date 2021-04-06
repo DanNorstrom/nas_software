@@ -5,7 +5,7 @@ import './App.css';
 import Navbar from "./components/navigationBar";
 import NAS_STAGE_1 from "./components/NAS_Stage_1"
 import NAS_STAGE_2 from "./components/NAS_Stage_2"
-import CheckData from "./components/CheckData"
+import PeerView from "./components/PeerView"
 import ReportDashboard from "./components/ReportDashboard"
 
 
@@ -35,8 +35,8 @@ function App() {
     <NAS_STAGE_2 />
     </Route>
 
-    <Route path="/CheckData">
-    <CheckData />
+    <Route path="/PeerView">
+    <PeerView />
     </Route>
 
     <Route path="/ReportDashboard">

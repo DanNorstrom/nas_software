@@ -3,9 +3,10 @@ services: #Different containers
 
   server: #Node server
     build: ./server
+    image: incendra/dockerfile
 
     # command overrides standard to use nodemon during DEV
-    command: nodemon server.js
+    command: nodemon --legacy-watch server.js
     ports:
       - "8080:8080"
     networks:
@@ -22,6 +23,7 @@ services: #Different containers
 
   client: #React app
     build: ./client
+    image: incendra/dockerfile
     ports:
       - "3000:3000"
     networks:
