@@ -7,7 +7,7 @@ WORKDIR /usr/src/app
 
 # Install dependencies in /usr/app/node_modules
 COPY package.json /usr/src/app/
-RUN npm install
+RUN npm install --unsafe-perm=true --allow-root
 
 # copy local files to app folder
 COPY . /usr/src/app
