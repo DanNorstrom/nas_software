@@ -11,8 +11,8 @@ WORKDIR /usr/src/app
 # Install Dependencies
 COPY package*.json ./
 
-RUN npm install --unsafe-perm=true --allow-root
-#npm ci
+RUN npm install --allow-root
+#npm ci --unsafe-perm=true
 
 # install nodemon environment
 RUN npm install -g nodemon
