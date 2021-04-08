@@ -11,6 +11,7 @@
     "@types/react-router-dom": "^5.1.6",
     "bootstrap": "^4.6.0",
     "chart.js": "^2.9.4",
+    "ec2-publicip": "^1.0.4",
     "ip": "^1.1.5",
     "jquery": "^3.5.1",
     "public-ip": "^4.0.3",

@@ -93,14 +93,26 @@ class PeerViewStage2 extends React.Component {
 
     // get current pc's ip
     //var ip = require('ip');
-    const publicIp = require('public-ip');
+    //const publicIp = require('public-ip');
+    var ec2 = require("ec2-publicip");
+ 
+    ec2.getPublicIP(function (error, ip) {
+    	if (error) {
+    		console.log(error);
+        console.log("this is a dev environment on localhost")
+    	}
+      else{
+        console.log("Instance Public IP: ", ip);
+      }
+    });
 
 
-    (async () => {
-      let ip = await publicIp.v4()
-      console.log(ip)
+    // (async () => {
+    //   let ip = await publicIp.v4()
+    //   console.log(ip)
 
-      fetch("http://"+ ip +":8080/posts/stage2raw/", requestOptions)
+
+      fetch("http://"+ "localhost" +":8080/posts/stage2raw/", requestOptions)
         .then(res => res.json())
         .then(json => {
             this.setState({
@@ -109,7 +121,7 @@ class PeerViewStage2 extends React.Component {
             console.log(this.state.data)
             this.forceUpdate(); // update based on state
       });        
-    })(); // end async
+    // })(); // end async
   }
   
   formSubmit() {  // removes (evt) -> we're not using forms
