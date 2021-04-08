@@ -92,16 +92,24 @@ class PeerViewStage2 extends React.Component {
     };
 
     // get current pc's ip
-    var ip = require('ip');
-    fetch("http://"+ip.address()+":8080/posts/stage2raw/", requestOptions)
-      .then(res => res.json())
-      .then(json => {
-           this.setState({
-             data: json.data,             
-           })
-           console.log(this.state.data)
-           this.forceUpdate(); // update based on state
-    });        
+    //var ip = require('ip');
+    const publicIp = require('public-ip');
+
+
+    (async () => {
+      let ip = await publicIp.v4()
+      console.log(ip)
+
+      fetch("http://"+ ip +":8080/posts/stage2raw/", requestOptions)
+        .then(res => res.json())
+        .then(json => {
+            this.setState({
+              data: json.data,             
+            })
+            console.log(this.state.data)
+            this.forceUpdate(); // update based on state
+      });        
+    })(); // end async
   }
   
   formSubmit() {  // removes (evt) -> we're not using forms
