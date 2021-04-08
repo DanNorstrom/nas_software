@@ -15,7 +15,7 @@ RUN npm install
 #npm ci  --allow-root --unsafe-perm=true
 
 # install nodemon environment
-RUN npm install -g nodemon
+# RUN npm install -g nodemon
 
 # Copy app source code
 COPY . .

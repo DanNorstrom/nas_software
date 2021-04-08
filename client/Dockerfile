@@ -11,6 +11,9 @@ COPY package.json /usr/src/app/
 RUN npm install 
 #--allow-root
 
+# install nodemon environment
+# RUN npm install -g nodemon
+
 # copy local files to app folder
 COPY . /usr/src/app
 

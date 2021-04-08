@@ -18,9 +18,9 @@ class PeerView extends React.Component {
               <Col xs><PeerViewStage1/></Col>
             </Row>
 
-            <Row>
+            {/* <Row>
               <Col xs><PeerViewStage2/></Col>
-            </Row>
+            </Row> */}
     
         </Grid>
     

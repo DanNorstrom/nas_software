@@ -12,6 +12,8 @@ import paginationFactory from 'react-bootstrap-table2-paginator'
 //import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
+var globals = require('../globals').default; // << globals.js path
+
 // take nas stage 1 input from nurses once per patient per shift.
 // and save to stage1 collection
 class PeerViewStage2 extends React.Component {
@@ -91,8 +93,6 @@ class PeerViewStage2 extends React.Component {
         'Access-Control-Allow-Origin' : '*' }
     };
 
-    // EC" or localhost?
-    var development_mode = true
 
     // access elastic EC2 instance public IP
     fetch("http://checkip.amazonaws.com/", requestOptions)
@@ -103,7 +103,7 @@ class PeerViewStage2 extends React.Component {
     .then(function(IP) {
 
       // check dev flag
-      if (development_mode){
+      if (globals.development_mode){
         IP = "localhost"
       }
 
@@ -137,9 +137,6 @@ class PeerViewStage2 extends React.Component {
       body: JSON.stringify(this.state.data) //JSON.stringify(state) // this.state.modifiedData
     };
 
-    // EC" or localhost?
-    var development_mode = true
-
     // access elastic EC2 instance public IP
     fetch("http://checkip.amazonaws.com/", requestOptions)
     .then(function(response) {
@@ -149,7 +146,7 @@ class PeerViewStage2 extends React.Component {
     .then(function(IP) {
 
       // check dev flag
-      if (development_mode){
+      if (globals.development_mode){
         IP = "localhost"
       }
 

@@ -6,7 +6,7 @@ import {XYPlot, LineSeries, HorizontalGridLines, VerticalGridLines, XAxis, YAxis
 import { Line } from 'react-chartjs-2';
 // import Chart from "chart.js";
 
-
+var globals = require('../globals'); // << globals.js path
 
 
 // take nas stage 1 input from nurses once per patient per shift.
@@ -90,19 +90,26 @@ function ReportNAS(props) {
             headers: { 'Content-Type': 'application/json','Access-Control-Allow-Origin' : '*' }
         };
 
-        // EC" or localhost?
-    var development_mode = true
+        var requestOptionsAWS = {
+            method: 'GET',
+            mode: 'no-cors',
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          };
+
 
     // access elastic EC2 instance public IP
-    fetch("http://checkip.amazonaws.com/", requestOptions)
+    fetch("http://checkip.amazonaws.com/", requestOptionsAWS)
     .then(function(response) {
       console.log(response.text())
       return response.text()
     })
     .then(function(IP) {
+        console.log(IP)
 
       // check dev flag
-      if (development_mode){
+      if (globals.development_mode){
         IP = "localhost"
       }
 

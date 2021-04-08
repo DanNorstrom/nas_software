@@ -6,7 +6,7 @@ services: #Different containers
     image: incendra/nas-server:latest
 
     # command overrides standard to use nodemon during DEV
-    command: nodemon --legacy-watch server.js
+    # command: nodemon server.js
     ports:
       - "8080:8080"
     networks:
@@ -24,6 +24,7 @@ services: #Different containers
   client: #React app
     build: ./client
     image: incendra/nas-client:latest
+    # command: nodemon client.js
     ports:
       - "3000:3000"
     networks:

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+var globals = require('../globals'); // << globals.js path
 
 
 
@@ -120,10 +121,6 @@ function NAS_STAGE_1() {
       body: JSON.stringify(state) //JSON.stringify(state)
     };
 
-
-    // EC" or localhost?
-    var development_mode = true
-
     // access elastic EC2 instance public IP
     fetch("http://checkip.amazonaws.com/", requestOptions)
     .then(function(response) {
@@ -133,7 +130,7 @@ function NAS_STAGE_1() {
     .then(function(IP) {
 
       // check dev flag
-      if (development_mode){
+      if (globals.development_mode){
         IP = "localhost"
       }
 

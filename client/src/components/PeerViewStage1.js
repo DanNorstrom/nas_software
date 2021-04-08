@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import fetch from "node-fetch";
 
 // import the react-json-view component
 import ReactJson from 'react-json-view';
@@ -12,6 +13,8 @@ import paginationFactory from 'react-bootstrap-table2-paginator'
 //import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
+import globals from '../globals.js' // << globals.js path
+
 // take nas stage 1 input from nurses once per patient per shift.
 // and save to stage1 collection
 class PeerViewStage1 extends React.Component {
@@ -24,7 +27,7 @@ class PeerViewStage1 extends React.Component {
     }
 
     // only push changes to api
-    this.modifiedData = []
+    // this.modifiedData = []
     
   };
 
@@ -576,43 +579,48 @@ class PeerViewStage1 extends React.Component {
 
 
   componentDidMount() {
-    this.getItems()
+    this.getItems() //.bind(this)
     this.forceUpdate(); // update based on state
   };
 
   getItems() {
+
     var requestOptions = {
       method: 'GET',
-      headers: { 'Content-Type': 'application/json','Access-Control-Allow-Origin' : '*' }
+      headers: { 
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin' : '*' }
     };
 
-    // EC" or localhost?
-    var development_mode = true
+    var requestOptionsAWS = {
+      method: 'GET',
+      mode: 'no-cors',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    };
 
     // access elastic EC2 instance public IP
-    fetch("http://checkip.amazonaws.com/", requestOptions)
-    .then(function(response) {
-      console.log(response.text())
+    fetch("http://checkip.amazonaws.com/", requestOptionsAWS)
+    .then((response) => {
       return response.text()
     })
-    .then(function(IP) {
+    .then((IP) => {
+      console.log(IP)
 
-      // check dev flag
-      if (development_mode){
+      //check dev flag
+      if (globals.development_mode){
         IP = "localhost"
       }
-
-      fetch("http://"+IP+":8080/posts/stage1raw/", requestOptions)
+      
+      fetch("http://"+IP.trim()+":8080/posts/stage1raw/")
       .then(res => res.json())
       .then(json => {
-           this.setState({
-             data: json.data,             
-           })
-           console.log(this.state.data)
-           this.forceUpdate(); // update based on state
-    });   
-
-            
+        this.setState({
+          data: json.data             
+        })
+        this.forceUpdate(); // update based on state
+      });           
     })
     .catch(function(error) { 
       console.log('Requestfailed', error)
@@ -626,29 +634,44 @@ class PeerViewStage1 extends React.Component {
     // evt.preventDefault();   //prevent default submit behavior.
 
     // Simple POST request with a JSON body using fetch
-    const requestOptions = {
-      method: 'POST',
+    var requestOptionsAWS = {
+      method: 'GET',
+      mode: 'no-cors',
       headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin' : '*' 
-      },
-      body: JSON.stringify(this.state.data) //JSON.stringify(state) // this.state.modifiedData
+        'Content-Type': 'application/json'
+      }
     };
 
-    fetch('http://localhost:8080/posts/modifyStage1/', requestOptions)
-    .then(response => response.json())
-    .then(response => {
-      if (response.success){
-        alert(   
-          'Success: '+response.success +'\n\n'
-        +'Message:\n'+ response.message);
+    // access elastic EC2 instance public IP
+    fetch("http://checkip.amazonaws.com/",requestOptionsAWS)
+    .then((response) => {
+      console.log(response.text())
+      return response.text()
+    })
+    .then((IP) => {
+      console.log('http://'+IP.trim()+':8080/posts/modifyStage1/')
+
+      // check dev flag
+      if (globals.development_mode){
+        IP = "localhost"
       }
-      else{
-        alert(   
-          'Success: '+response.success +'\n\n'
-        +'Error:\n'+ response.error + '\n\n'
-        +'Message:\n'+ response.message);
-      }
+
+      //ip.trim() because of aws api newline
+      fetch('http://'+IP.trim()+':8080/posts/modifyStage1/')
+      .then(response => response.json())
+      .then(response => {
+        if (response.success){
+          alert(   
+            'Success: '+response.success +'\n\n'
+          +'Message:\n'+ response.message);
+        }
+        else{
+          alert(   
+            'Success: '+response.success +'\n\n'
+          +'Error:\n'+ response.error + '\n\n'
+          +'Message:\n'+ response.message);
+        }
+      })
     })
   }
 
