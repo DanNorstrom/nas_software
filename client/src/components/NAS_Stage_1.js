@@ -120,7 +120,9 @@ function NAS_STAGE_1() {
       body: JSON.stringify(state) //JSON.stringify(state)
     };
 
-    fetch('http://localhost:8080/posts/stage1/', requestOptions)
+    // get current pc's ip
+    var ip = require('ip');
+    fetch("http://"+ip.address()+":8080/posts/stage1/", requestOptions)
     .then(response => response.json())
     .then(response => {
       if (response.success){

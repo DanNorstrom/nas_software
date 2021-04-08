@@ -86,10 +86,14 @@ class PeerViewStage2 extends React.Component {
   getItems() {
     var requestOptions = {
       method: 'GET',
-      headers: { 'Content-Type': 'application/json','Access-Control-Allow-Origin' : '*' }
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin' : '*' }
     };
 
-    fetch("http://localhost:8080/posts/stage2raw/", requestOptions)
+    // get current pc's ip
+    var ip = require('ip');
+    fetch("http://"+ip.address()+":8080/posts/stage2raw/", requestOptions)
       .then(res => res.json())
       .then(json => {
            this.setState({

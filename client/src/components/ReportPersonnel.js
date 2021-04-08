@@ -88,7 +88,9 @@ function ReportPersonnel(props) {
             headers: { 'Content-Type': 'application/json','Access-Control-Allow-Origin' : '*' }
         };
 
-        fetch("http://localhost:8080/data/personnel_count/"+state.DATE+"T00:00:00.000+00:00", requestOptions)
+        // get current pc's ip
+        var ip = require('ip');
+        fetch("http://"+ip.address()+":8080/data/personnel_count/"+state.DATE+"T00:00:00.000+00:00", requestOptions)
             .then(res => res.json())
             .then(json => {
                 setState({
