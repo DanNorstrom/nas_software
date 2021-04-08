@@ -94,35 +94,45 @@ class PeerViewStage2 extends React.Component {
     // get current pc's ip
     //var ip = require('ip');
     //const publicIp = require('public-ip');
-    var ec2 = require("ec2-publicip");
+    // var ec2 = require("ec2-publicip");
  
-    ec2.getPublicIP(function (error, ip) {
-    	if (error) {
-    		console.log(error);
-        console.log("this is a dev environment on localhost")
-    	}
-      else{
-        console.log("Instance Public IP: ", ip);
-      }
-    });
+    // ec2.getPublicIP(function (error, ip) {
+    // 	if (error) {
+    // 		console.log(error);
+    //     console.log("this is a dev environment on localhost")
+    // 	}
+    //   else{
+    //     console.log("Instance Public IP: ", ip);
+    //   }
+    // });
 
 
     // (async () => {
     //   let ip = await publicIp.v4()
     //   console.log(ip)
 
+    // access elastic EC2 instance public IP
 
-      fetch("http://"+ "localhost" +":8080/posts/stage2raw/", requestOptions)
-        .then(res => res.json())
-        .then(json => {
-            this.setState({
-              data: json.data,             
-            })
-            console.log(this.state.data)
-            this.forceUpdate(); // update based on state
-      });        
-    // })(); // end async
-  }
+      fetch("http://checkip.amazonaws.com/")
+      .then(function(response) {
+        console.log(response.text())
+        return response.text()
+      })
+      .then(function(IP) {
+        fetch("http://"+ IP +":8080/posts/stage2raw/", requestOptions)
+          .then(res => res.json())
+          .then(json => {
+              this.setState({
+                data: json.data,             
+              })
+              console.log(this.state.data)
+              this.forceUpdate(); // update based on state
+        });        
+      })
+      .catch(function(error) { 
+        console.log('Requestfailed', error)
+      });
+    }
   
   formSubmit() {  // removes (evt) -> we're not using forms
     // console.log(this.state.data)   // log to
