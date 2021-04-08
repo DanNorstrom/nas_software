@@ -90,161 +90,89 @@ function ReportNAS(props) {
             headers: { 'Content-Type': 'application/json','Access-Control-Allow-Origin' : '*' }
         };
 
-        // get current pc's ip
-        var ip = require('ip');
-        fetch("http://"+ip.address()+":8080/data/ReportPatientPersonnelAvgPerShift/"+state.DATE1+"T00:00:00.000+00:00/"+state.DATE2+"T00:00:00.000+00:00", requestOptions)
-            .then(res => res.json())
-            .then(json => {
+        // EC" or localhost?
+    var development_mode = true
 
-                // patients
-                for (const dataObj of json.data[0]) {
-                    //apiDate.push( (new Date(dataObj.DATE)).toISOString().split('T')[0].slice(4,7))
-                    apiDate.push( (new Date(dataObj.DATE)).toISOString().split('T')[0].slice(8,))
-                    apiPatient.push(parseFloat(dataObj.Pa_NAS))
-                }
+    // access elastic EC2 instance public IP
+    fetch("http://checkip.amazonaws.com/", requestOptions)
+    .then(function(response) {
+      console.log(response.text())
+      return response.text()
+    })
+    .then(function(IP) {
 
-                // personnel
-                for (const dataObj of json.data[1]) {
-                    // apiDate.push(dataObj.DATE)
-                    apiPersonnel.push(parseFloat(dataObj.Pe_NAS))
-                }
+      // check dev flag
+      if (development_mode){
+        IP = "localhost"
+      }
 
-                // calc nas
-                for (let i = 0; i<apiPatient.length; i++) {
-                    apiNAS.push( (apiPatient[i]/apiPersonnel[i])*100 )
-                }
+    fetch("http://"+IP+":8080/data/ReportPatientPersonnelAvgPerShift/"+state.DATE1+"T00:00:00.000+00:00/"+state.DATE2+"T00:00:00.000+00:00", requestOptions)
+        .then(res => res.json())
+        .then(json => {
 
-
-                console.log(apiPersonnel)
-                console.log(apiPatient)
-
-                // sort distinct date values in array
-                // apiDate.filter((date, i, self) => self.findIndex(d => d.getTime() === date.getTime()) === i)
-
-
-                setChartData({
-                    labels: apiDate,
-                    datasets: 
-                    [{
-                        barPercentage: 0.8,
-                        label: "NAS per day",
-                        backgroundColor: [
-                            getComputedStyle(document.documentElement).getPropertyValue('--graph-red-fill')
-                        ],
-                        borderColor: [
-                            getComputedStyle(document.documentElement).getPropertyValue('--graph-red-line')
-                        ],
-                        hoverBackgroundColor: [
-                            getComputedStyle(document.documentElement).getPropertyValue('--graph-red-hoverfill')
-                        ],
-                        hoverBorderColor: [
-                            getComputedStyle(document.documentElement).getPropertyValue('--graph-red-hoverline')
-                        ],
-                        data: apiNAS
-                    }]
-                })
-    
+            // patients
+            for (const dataObj of json.data[0]) {
+                //apiDate.push( (new Date(dataObj.DATE)).toISOString().split('T')[0].slice(4,7))
+                apiDate.push( (new Date(dataObj.DATE)).toISOString().split('T')[0].slice(8,))
+                apiPatient.push(parseFloat(dataObj.Pa_NAS))
             }
-        );
 
-        // build chartjs
-        // var ctx = document.getElementById('myChart').getContext('2d');
-        // new Chart(ctx, {
-        //     type: "bar",
-        //     ...chartData,
-        //     ...chartOptions            
-        // });
+            // personnel
+            for (const dataObj of json.data[1]) {
+                // apiDate.push(dataObj.DATE)
+                apiPersonnel.push(parseFloat(dataObj.Pe_NAS))
+            }
+
+            // calc nas
+            for (let i = 0; i<apiPatient.length; i++) {
+                apiNAS.push( (apiPatient[i]/apiPersonnel[i])*100 )
+            }
+
+
+            console.log(apiPersonnel)
+            console.log(apiPatient)
+
+            // sort distinct date values in array
+            // apiDate.filter((date, i, self) => self.findIndex(d => d.getTime() === date.getTime()) === i)
+
+
+            setChartData({
+                labels: apiDate,
+                datasets: 
+                [{
+                    barPercentage: 0.8,
+                    label: "NAS per day",
+                    backgroundColor: [
+                        getComputedStyle(document.documentElement).getPropertyValue('--graph-red-fill')
+                    ],
+                    borderColor: [
+                        getComputedStyle(document.documentElement).getPropertyValue('--graph-red-line')
+                    ],
+                    hoverBackgroundColor: [
+                        getComputedStyle(document.documentElement).getPropertyValue('--graph-red-hoverfill')
+                    ],
+                    hoverBorderColor: [
+                        getComputedStyle(document.documentElement).getPropertyValue('--graph-red-hoverline')
+                    ],
+                    data: apiNAS
+                }]
+            })
+
+        }
+    );
+
+    })
+    .catch(function(error) { 
+      console.log('Requestfailed', error)
+    });
+
     }
-
-    
-    // function formSubmit(evt = null) {
-    //     if (evt != null) evt.preventDefault();   //prevent default submit behavior.
-    //     let apiNAS = [];
-    //     let apiID = [];
- 
-    //     var requestOptions = {
-    //         method: 'GET',
-    //         headers: { 'Content-Type': 'application/json','Access-Control-Allow-Origin' : '*' }
-    //     };
-
-    //     fetch("http://localhost:8080/data/nas/"+state.DATE1+"T00:00:00.000+00:00/"+state.DATE2+"T00:00:00.000+00:00", requestOptions)
-    //         .then(res => res.json())
-    //         .then(json => {
-    //             setState({
-    //                 ...state,
-    //                 data: json.data
-    //               });
-    //             for (const dataObj of json.data) {
-    //                 apiID.push(dataObj.RANGE)
-    //                 apiNAS.push(parseInt(dataObj.NAS_WEIGHT))
-    //             }
-
-    //             setChartData({
-    //                 labels: apiID,
-    //                 datasets: [{
-    //                     barPercentage: 0.8,
-    //                     label: "Patient NAS Weight / Time",
-    //                     backgroundColor: [
-    //                         getComputedStyle(document.documentElement).getPropertyValue('--graph-blue-fill'),
-    //                         getComputedStyle(document.documentElement).getPropertyValue(props.graph+'-fill'),
-    //                         getComputedStyle(document.documentElement).getPropertyValue('--graph-green-fill')
-    //                     ],
-    //                     borderColor: [
-    //                         getComputedStyle(document.documentElement).getPropertyValue('--graph-blue-line'),
-    //                         getComputedStyle(document.documentElement).getPropertyValue(props.graph+'-line'),
-    //                         getComputedStyle(document.documentElement).getPropertyValue('--graph-green-line')
-    //                     ],
-    //                     hoverBackgroundColor: [
-    //                         getComputedStyle(document.documentElement).getPropertyValue('--graph-blue-hoverfill'),
-    //                         getComputedStyle(document.documentElement).getPropertyValue(props.graph+'-hoverfill'),
-    //                         getComputedStyle(document.documentElement).getPropertyValue('--graph-green-hoverfill')
-    //                     ],
-    //                     hoverBorderColor: [
-    //                         getComputedStyle(document.documentElement).getPropertyValue('--graph-blue-hoverline'),
-    //                         getComputedStyle(document.documentElement).getPropertyValue(props.graph+'-hoverline'),
-    //                         getComputedStyle(document.documentElement).getPropertyValue('--graph-green-hoverline')
-    //                     ],
-    //                     data: apiNAS,
-    //                 }]
-    //             })
-                
-    //             // use context in chartjs to color bars differently
-
-    //             // setChartOptions({
-    //             //     // responsive true
-    //             //     maintainAspectRatio : false,
-    //             //     responsive: true,
-    //             //     scales: {
-    //             //         yAxes: [{
-    //             //             ticks: {
-    //             //                 beginAtZero: true
-    //             //             }
-    //             //         }]
-    //             //     }
-    //             // })
-
-
-    //             console.log(json.data)              
-    //             //console.log(state.data)
-    //         }
-    //     );
-
-    //     // build chartjs
-    //     // var ctx = document.getElementById('myChart').getContext('2d');
-    //     // new Chart(ctx, {
-    //     //     type: "bar",
-    //     //     ...chartData,
-    //     //     ...chartOptions            
-    //     // });
-    // }
 
     // initialize dashboard, call once
     useEffect(() => {
         formSubmit()
     }, []);
     
-
-     //console.log([...state.data])
     return (
         <div className="dashboard-item">
 

@@ -586,9 +586,23 @@ class PeerViewStage1 extends React.Component {
       headers: { 'Content-Type': 'application/json','Access-Control-Allow-Origin' : '*' }
     };
 
-    // get current pc's ip
-    var ip = require('ip');
-    fetch("http://"+ip.address()+":8080/posts/stage1raw/", requestOptions)
+    // EC" or localhost?
+    var development_mode = true
+
+    // access elastic EC2 instance public IP
+    fetch("http://checkip.amazonaws.com/", requestOptions)
+    .then(function(response) {
+      console.log(response.text())
+      return response.text()
+    })
+    .then(function(IP) {
+
+      // check dev flag
+      if (development_mode){
+        IP = "localhost"
+      }
+
+      fetch("http://"+IP+":8080/posts/stage1raw/", requestOptions)
       .then(res => res.json())
       .then(json => {
            this.setState({
@@ -596,7 +610,14 @@ class PeerViewStage1 extends React.Component {
            })
            console.log(this.state.data)
            this.forceUpdate(); // update based on state
-    });        
+    });   
+
+            
+    })
+    .catch(function(error) { 
+      console.log('Requestfailed', error)
+    });
+
   }
   
   formSubmit() {  // removes (evt) -> we're not using forms

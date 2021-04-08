@@ -34,25 +34,45 @@ function NAS_STAGE_2() {
       body: JSON.stringify(state) //JSON.stringify(state)
     };
 
-    // get current pc's ip
-    var ip = require('ip');
-    fetch("http://"+ip.address()+":8080/posts/stage2/", requestOptions)
-    .then(response => response.json())
-    .then(response => {
-      if (response.success){
-        alert(   
-          'Success: '+response.success +'\n\n'
-        +'Message:\n'+ response.message);
-      }
-      else{
-        alert(   
-          'Success: '+response.success +'\n\n'
-        +'Error:\n'+ response.error + '\n\n'
-        +'Message:\n'+ response.message);
-      }
-    })
+ 
+        // EC" or localhost?
+        var development_mode = true
 
-      console.log(state)
+        // access elastic EC2 instance public IP
+        fetch("http://checkip.amazonaws.com/", requestOptions)
+        .then(function(response) {
+          console.log(response.text())
+          return response.text()
+        })
+        .then(function(IP) {
+    
+          // check dev flag
+          if (development_mode){
+            IP = "localhost"
+          }
+    
+          fetch("http://"+IP+":8080/posts/stage2/", requestOptions)
+          .then(response => response.json())
+          .then(response => {
+            if (response.success){
+              alert(   
+                'Success: '+response.success +'\n\n'
+              +'Message:\n'+ response.message);
+            }
+            else{
+              alert(   
+                'Success: '+response.success +'\n\n'
+              +'Error:\n'+ response.error + '\n\n'
+              +'Message:\n'+ response.message);
+            }
+          })
+
+                
+        })
+        .catch(function(error) { 
+          console.log('Requestfailed', error)
+        });
+
     }
 
     return (

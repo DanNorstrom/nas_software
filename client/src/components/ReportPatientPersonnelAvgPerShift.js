@@ -89,9 +89,23 @@ function ReportPatientPersonnelAvgPerShift(props) {
             headers: { 'Content-Type': 'application/json','Access-Control-Allow-Origin' : '*' }
         };
 
-        // get current pc's ip
-        var ip = require('ip');
-        fetch("http://"+ip.address()+":8080/data/ReportPatientPersonnelAvgPerShift/"+state.DATE1+"T00:00:00.000+00:00/"+state.DATE2+"T00:00:00.000+00:00", requestOptions)
+        // EC" or localhost?
+    var development_mode = true
+
+    // access elastic EC2 instance public IP
+    fetch("http://checkip.amazonaws.com/", requestOptions)
+    .then(function(response) {
+      console.log(response.text())
+      return response.text()
+    })
+    .then(function(IP) {
+
+      // check dev flag
+      if (development_mode){
+        IP = "localhost"
+      }
+
+        fetch("http://"+IP+":8080/data/ReportPatientPersonnelAvgPerShift/"+state.DATE1+"T00:00:00.000+00:00/"+state.DATE2+"T00:00:00.000+00:00", requestOptions)
             .then(res => res.json())
             .then(json => {
 
@@ -155,16 +169,11 @@ function ReportPatientPersonnelAvgPerShift(props) {
                 ]
                 })
     
-            }
-        );
-
-        // build chartjs
-        // var ctx = document.getElementById('myChart').getContext('2d');
-        // new Chart(ctx, {
-        //     type: "bar",
-        //     ...chartData,
-        //     ...chartOptions            
-        // });
+            });
+        })
+        .catch(function(error) { 
+          console.log('Requestfailed', error)
+        });
     }
 
     // initialize dashboard, call once
@@ -173,7 +182,6 @@ function ReportPatientPersonnelAvgPerShift(props) {
     }, []);
     
 
-     //console.log([...state.data])
     return (
         <div className="dashboard-item">
 

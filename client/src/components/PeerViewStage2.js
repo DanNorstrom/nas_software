@@ -91,48 +91,36 @@ class PeerViewStage2 extends React.Component {
         'Access-Control-Allow-Origin' : '*' }
     };
 
-    // get current pc's ip
-    //var ip = require('ip');
-    //const publicIp = require('public-ip');
-    // var ec2 = require("ec2-publicip");
- 
-    // ec2.getPublicIP(function (error, ip) {
-    // 	if (error) {
-    // 		console.log(error);
-    //     console.log("this is a dev environment on localhost")
-    // 	}
-    //   else{
-    //     console.log("Instance Public IP: ", ip);
-    //   }
-    // });
-
-
-    // (async () => {
-    //   let ip = await publicIp.v4()
-    //   console.log(ip)
+    // EC" or localhost?
+    var development_mode = true
 
     // access elastic EC2 instance public IP
+    fetch("http://checkip.amazonaws.com/", requestOptions)
+    .then(function(response) {
+      console.log(response.text())
+      return response.text()
+    })
+    .then(function(IP) {
 
-      fetch("http://checkip.amazonaws.com/")
-      .then(function(response) {
-        console.log(response.text())
-        return response.text()
-      })
-      .then(function(IP) {
-        fetch("http://"+ IP +":8080/posts/stage2raw/", requestOptions)
-          .then(res => res.json())
-          .then(json => {
-              this.setState({
-                data: json.data,             
-              })
-              console.log(this.state.data)
-              this.forceUpdate(); // update based on state
-        });        
-      })
-      .catch(function(error) { 
-        console.log('Requestfailed', error)
-      });
-    }
+      // check dev flag
+      if (development_mode){
+        IP = "localhost"
+      }
+
+      fetch("http://"+ IP +":8080/posts/stage2raw/", requestOptions)
+        .then(res => res.json())
+        .then(json => {
+            this.setState({
+              data: json.data,             
+            })
+            console.log(this.state.data)
+            this.forceUpdate(); // update based on state
+      });        
+    })
+    .catch(function(error) { 
+      console.log('Requestfailed', error)
+    });
+  }
   
   formSubmit() {  // removes (evt) -> we're not using forms
     // console.log(this.state.data)   // log to
@@ -149,21 +137,42 @@ class PeerViewStage2 extends React.Component {
       body: JSON.stringify(this.state.data) //JSON.stringify(state) // this.state.modifiedData
     };
 
-    fetch('http://localhost:8080/posts/modifyStage2/', requestOptions)
-    .then(response => response.json())
-    .then(response => {
-      if (response.success){
-        alert(   
-          'Success: '+response.success +'\n\n'
-        +'Message:\n'+ response.message);
-      }
-      else{
-        alert(   
-          'Success: '+response.success +'\n\n'
-        +'Error:\n'+ response.error + '\n\n'
-        +'Message:\n'+ response.message);
-      }
+    // EC" or localhost?
+    var development_mode = true
+
+    // access elastic EC2 instance public IP
+    fetch("http://checkip.amazonaws.com/", requestOptions)
+    .then(function(response) {
+      console.log(response.text())
+      return response.text()
     })
+    .then(function(IP) {
+
+      // check dev flag
+      if (development_mode){
+        IP = "localhost"
+      }
+
+      fetch('http://localhost:8080/posts/modifyStage2/', requestOptions)
+      .then(response => response.json())
+      .then(response => {
+        if (response.success){
+          alert(   
+            'Success: '+response.success +'\n\n'
+          +'Message:\n'+ response.message);
+        }
+        else{
+          alert(   
+            'Success: '+response.success +'\n\n'
+          +'Error:\n'+ response.error + '\n\n'
+          +'Message:\n'+ response.message);
+        }
+      })
+              
+    })
+    .catch(function(error) { 
+      console.log('Requestfailed', error)
+    });
   }
 
   render() {
