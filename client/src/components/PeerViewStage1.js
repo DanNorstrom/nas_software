@@ -643,7 +643,7 @@ class PeerViewStage1 extends React.Component {
     };
 
     // access elastic EC2 instance public IP
-    fetch("http://checkip.amazonaws.com/",requestOptionsAWS)
+    fetch("http://checkip.amazonaws.com/")
     .then((response) => {
       console.log(response.text())
       return response.text()
