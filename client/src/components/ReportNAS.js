@@ -100,20 +100,32 @@ function ReportNAS(props) {
 
 
     // access elastic EC2 instance public IP
-    fetch("http://checkip.amazonaws.com/", requestOptionsAWS)
-    .then(function(response) {
-      console.log(response.text())
-      return response.text()
-    })
-    .then(function(IP) {
-        console.log(IP)
+    // fetch("http://checkip.amazonaws.com/", requestOptionsAWS)
+    // .then(function(response) {
+    //   console.log(response.text())
+    //   return response.text()
+    // })
+    // .then(function(IP) {
+    //     console.log(IP)
 
-      // check dev flag
-      if (globals.development_mode){
-        IP = "localhost"
+    //   // check dev flag
+    //   if (globals.development_mode){
+    //     IP = "localhost"
+    //   }
+
+    // check globals for info
+    async function get_ip(){
+        if (globals.development_mode){
+          return "localhost"
+        }
+        else{
+          return globals.ec2_p_ip
+        }
       }
-
-    fetch("http://"+IP+":8080/data/ReportPatientPersonnelAvgPerShift/"+state.DATE1+"T00:00:00.000+00:00/"+state.DATE2+"T00:00:00.000+00:00", requestOptions)
+  
+      // connect to ec2 instance / localhost
+      get_ip().then((IP) => {
+        fetch("http://"+IP+":8080/data/ReportPatientPersonnelAvgPerShift/"+state.DATE1+"T00:00:00.000+00:00/"+state.DATE2+"T00:00:00.000+00:00", requestOptions)
         .then(res => res.json())
         .then(json => {
 

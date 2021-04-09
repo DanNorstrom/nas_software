@@ -663,32 +663,35 @@ class PeerViewStage1 extends React.Component {
     // evt.preventDefault();   //prevent default submit behavior.
 
     // Simple POST request with a JSON body using fetch
-    var requestOptionsAWS = {
-      method: 'GET',
-      mode: 'no-cors',
-      headers: {
-        'Content-Type': 'plain'
-      }
-    };
+    // var requestOptionsAWS = {
+    //   method: 'GET',
+    //   mode: 'no-cors',
+    //   headers: {
+    //     'Content-Type': 'plain'
+    //   }
+    // };
 
-    // access elastic EC2 instance public IP
-    fetch("http://checkip.amazonaws.com/",requestOptionsAWS)
-    .then((response) => {
-      console.log("hello there!")
-      console.log(response)
-      return response.text()
-    })
-    .then((IP) => {
-      console.log(IP)
-      console.log('http://'+IP.trim()+':8080/posts/modifyStage1/')
+    // // access elastic EC2 instance public IP
+    // fetch("http://checkip.amazonaws.com/",requestOptionsAWS)
+    // .then((response) => {
+    //   console.log("hello there!")
+    //   console.log(response)
+    //   return response.text()
+    // })
 
-      // check dev flag
+    // check globals for info
+    async function get_ip(){
       if (globals.development_mode){
-        IP = "localhost"
+        return "localhost"
       }
+      else{
+        return globals.ec2_p_ip
+      }
+    }
 
-      //ip.trim() because of aws api newline
-      fetch('http://'+IP.trim()+':8080/posts/modifyStage1/')
+    // connect to ec2 instance / localhost
+    get_ip().then((IP) => {
+      fetch('http://'+IP+':8080/posts/modifyStage1/')
       .then(response => response.json())
       .then(response => {
         if (response.success){

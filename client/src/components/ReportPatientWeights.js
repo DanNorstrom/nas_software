@@ -91,18 +91,30 @@ function ReportPatientWeights(props) {
 
 
     // access elastic EC2 instance public IP
-    fetch("http://checkip.amazonaws.com/", requestOptions)
-    .then(function(response) {
-      console.log(response.text())
-      return response.text()
-    })
-    .then(function(IP) {
+    // fetch("http://checkip.amazonaws.com/", requestOptions)
+    // .then(function(response) {
+    //   console.log(response.text())
+    //   return response.text()
+    // })
+    // .then(function(IP) {
 
-      // check dev flag
-      if (globals.development_mode){
-        IP = "localhost"
+    //   // check dev flag
+    //   if (globals.development_mode){
+    //     IP = "localhost"
+    //   }
+
+      // check globals for info
+    async function get_ip(){
+        if (globals.development_mode){
+          return "localhost"
+        }
+        else{
+          return globals.ec2_p_ip
+        }
       }
-
+  
+      // connect to ec2 instance / localhost
+      get_ip().then((IP) => {
         fetch("http://"+IP+":8080/data/patient_weights/"+state.DATE1+"T00:00:00.000+00:00/"+state.DATE2+"T00:00:00.000+00:00", requestOptions)
             .then(res => res.json())
             .then(json => {
