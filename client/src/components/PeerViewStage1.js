@@ -588,32 +588,60 @@ class PeerViewStage1 extends React.Component {
     var requestOptions = {
       method: 'GET',
       headers: { 
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json/plain',
         'Access-Control-Allow-Origin' : '*' }
     };
 
     var requestOptionsAWS = {
       method: 'GET',
-      mode: 'no-cors',
+      mode: 'cors',
       headers: {
-        'Content-Type': 'application/json'
-      }
-    };
+        'Content-Type': 'text/plain'
+      },
+    }
 
-    // access elastic EC2 instance public IP
-    fetch("http://checkip.amazonaws.com/", requestOptionsAWS)
-    .then((response) => {
-      return response.text()
-    })
-    .then((IP) => {
-      console.log(IP)
+  // functional call
+  //   async function callaws(){
+  //     const res = await fetch("http://checkip.amazonaws.com/", requestOptionsAWS)
+  //     const text = await res.text()
+  //     return res
+  //   }
+  //   callaws().then(text => {
+  //     console.log(text)
+  //   })
+  // }
 
-      //check dev flag
+  // access elastic EC2 instance public IP
+  // fetch("http://checkip.amazonaws.com/", requestOptionsAWS)
+  // .then(response => response.json())
+  // .then(jsondata => console.log(jsondata))
+
+  // .then((response) => {
+  //   console.log("hello there!")
+
+  //     return response.text()
+  //   })
+  //   .then((IP) => {
+  //     console.log(IP)
+
+      // //check dev flag
+      // if (globals.development_mode){
+      //   IP = "localhost"
+      // }
+    
+    // check globals for info
+    async function get_ip(){
       if (globals.development_mode){
-        IP = "localhost"
+        return "localhost"
       }
-      
-      fetch("http://"+IP.trim()+":8080/posts/stage1raw/")
+      else{
+        return globals.ec2_p_ip
+      }
+    }
+
+    // connect to ec2 instance / localhost
+    get_ip().then((IP) => {
+      fetch("http://"+IP+":8080/posts/stage1raw/")
       .then(res => res.json())
       .then(json => {
         this.setState({
@@ -625,8 +653,9 @@ class PeerViewStage1 extends React.Component {
     .catch(function(error) { 
       console.log('Requestfailed', error)
     });
-
+    
   }
+
   
   formSubmit() {  // removes (evt) -> we're not using forms
     // console.log(this.state.data)   // log to
@@ -638,17 +667,19 @@ class PeerViewStage1 extends React.Component {
       method: 'GET',
       mode: 'no-cors',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'plain'
       }
     };
 
     // access elastic EC2 instance public IP
     fetch("http://checkip.amazonaws.com/",requestOptionsAWS)
     .then((response) => {
-      console.log(response.text())
+      console.log("hello there!")
+      console.log(response)
       return response.text()
     })
     .then((IP) => {
+      console.log(IP)
       console.log('http://'+IP.trim()+':8080/posts/modifyStage1/')
 
       // check dev flag
