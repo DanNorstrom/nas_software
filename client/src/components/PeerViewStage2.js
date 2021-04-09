@@ -12,7 +12,7 @@ import paginationFactory from 'react-bootstrap-table2-paginator'
 //import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-var globals = require('../globals').default; // << globals.js path
+import globals from '../globals.js' // << globals.js path
 
 // take nas stage 1 input from nurses once per patient per shift.
 // and save to stage1 collection

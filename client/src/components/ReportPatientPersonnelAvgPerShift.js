@@ -6,7 +6,7 @@ import {XYPlot, LineSeries, HorizontalGridLines, VerticalGridLines, XAxis, YAxis
 import { Line } from 'react-chartjs-2';
 // import Chart from "chart.js";
 
-var globals = require('../globals'); // << globals.js path
+import globals from '../globals.js' // << globals.js path
 
 
 // take nas stage 1 input from nurses once per patient per shift.

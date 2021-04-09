@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-var globals = require('../globals'); // << globals.js path
+import globals from '../globals.js' // << globals.js path
 
 
     //#"react": "^17.0.1",
