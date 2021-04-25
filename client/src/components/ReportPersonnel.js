@@ -15,7 +15,7 @@ function ReportPersonnel(props) {
     
     const [state, setState] = useState({ 
         data: [],
-        DATE:  "2021-03-23"//new Date().toLocaleDateString('en-CA') //new Date() --> curent date --> useEffect on load to render first time
+        DATE:  "2021-03-01"//new Date().toLocaleDateString('en-CA') //new Date() --> curent date --> useEffect on load to render first time
     });
     
     const [chartData,setChartData] = useState(
@@ -114,7 +114,7 @@ function ReportPersonnel(props) {
   
       // connect to ec2 instance / localhost
       get_ip().then((IP) => {
-        fetch("http://"+IP+":8080/data/personnel_count/"+state.DATE+"T00:00:00.000+00:00", requestOptions)
+        fetch("http://"+IP+":8080/data/personnel_count/"+props.hospital+"/"+state.DATE+"T00:00:00.000+00:00", requestOptions)
             .then(res => res.json())
             .then(json => {
                 setState({
@@ -152,7 +152,7 @@ function ReportPersonnel(props) {
     // initialize dashboard, call once
     useEffect(() => {
         formSubmit()
-    }, []);
+    }, [props.hospital]); //re-render component when props update
     
     return (
         <div className="dashboard-item">

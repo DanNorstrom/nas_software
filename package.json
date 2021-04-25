@@ -7,7 +7,7 @@
     "start": "node client/src/index.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "Dan Norstrom",
   "license": "ISC",
   "dependencies": {
     "bootstrap": "^4.6.0",

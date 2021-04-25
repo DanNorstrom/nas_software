@@ -12,11 +12,13 @@ import globals from '../globals.js' // << globals.js path
 // take nas stage 1 input from nurses once per patient per shift.
 // and save to stage1 collection
 function ReportNAS(props) {
+
+
     
     const [state, setState] = useState({ 
         data: [],
-        DATE1:  "2021-03-23",
-        DATE2: "2021-04-23"     //new Date().toLocaleDateString('en-CA') //new Date() --> curent date --> useEffect on load to render first time
+        DATE1:  "2021-03-01",
+        DATE2: "2021-03-05"     //new Date().toLocaleDateString('en-CA') //new Date() --> curent date --> useEffect on load to render first time
     });
     const [chartData,setChartData] = useState(
         {
@@ -76,6 +78,7 @@ function ReportNAS(props) {
           ...state,
           [evt.target.name]: evt.target.value
         });
+        console.log('nas: ' +props.hospital)
     }
 
     function formSubmit(evt = null) {
@@ -125,7 +128,7 @@ function ReportNAS(props) {
   
       // connect to ec2 instance / localhost
       get_ip().then((IP) => {
-        fetch("http://"+IP+":8080/data/ReportPatientPersonnelAvgPerShift/"+state.DATE1+"T00:00:00.000+00:00/"+state.DATE2+"T00:00:00.000+00:00", requestOptions)
+        fetch("http://"+IP+":8080/data/ReportPatientPersonnelAvgPerShift/"+props.hospital+"/"+state.DATE1+"T00:00:00.000+00:00/"+state.DATE2+"T00:00:00.000+00:00", requestOptions)
         .then(res => res.json())
         .then(json => {
 
@@ -190,7 +193,7 @@ function ReportNAS(props) {
     // initialize dashboard, call once
     useEffect(() => {
         formSubmit()
-    }, []);
+    }, [props.hospital]); //re-render component when props update
     
     return (
         <div className="dashboard-item">

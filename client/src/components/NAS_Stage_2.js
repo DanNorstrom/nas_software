@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import globals from '../globals.js' // << globals.js path
-
+import { SolarSystemLoading as Loading } from 'react-loadingg';
+import { useAuth0, withAuthenticationRequired } from "@auth0/auth0-react";
 
     //#"react": "^17.0.1",
     //"react-dom": "^17.0.1",
@@ -11,6 +12,7 @@ function NAS_STAGE_2() {
     Personnel_D: "",
     Personnel_A: "",
     Personnel_N: "",
+    HOSPITAL: "Akershus universitetssykehus",
     DATE: ""
   });
 
@@ -102,7 +104,53 @@ function NAS_STAGE_2() {
               onChange={handleChange}
             />
           </div>
+      </div>
+
+      <div class="grid-FormContainer1" > 
+          <div class="form-TextInput">
+              <select
+              name="HOSPITAL"
+              // value={state.TIME_IN}
+              onChange={handleChange}
+              required
+              >
+                <option value="Akershus universitetssykehus">Akershus universitetssykehus</option>
+                <option value="Oslo universitetssykehus">Oslo universitetssykehus</option>
+                <option value="Haukeland universitetssykehus">Haukeland universitetssykehus</option>
+                <option value="Stavanger universitetssjukehus">Stavanger universitetssjukehus</option>
+                <option value="St. Olavs hospital">St. Olavs hospital</option>
+                <option value="Sykehuset Østfold">Sykehuset Østfold</option>
+                <option value="Sykehuset i Vestfold">Sykehuset i Vestfold</option>
+                <option value="Sykehuset Telemark">Sykehuset Telemark</option>
+                <option value="Bærum sykehus">Bærum sykehus</option>
+                <option value="Drammen sykehus">Drammen sykehus</option>
+                <option value="Universitetssykehuset Nord-Norge">Universitetssykehuset Nord-Norge</option>
+                <option value="Haugesund sjukehus">Haugesund sjukehus</option>
+                <option value="Førde sentralsjukehus">Førde sentralsjukehus</option>
+                <option value="Sykehuset Innlandet">Sykehuset Innlandet</option>
+                <option value="Ålesund sjukehus">Ålesund sjukehus</option>
+                <option value="Sørlandet sykehus">Sørlandet sykehus</option>
+                <option value="Sykehuset Levanger">Sykehuset Levanger</option>
+                <option value="Ringerike sykehus">Ringerike sykehus</option>
+                <option value="Nordlandssykehuset">Nordlandssykehuset</option>
+                <option value="Kristiansund sjukehus">Kristiansund sjukehus</option>
+                <option value="Molde sjukehus">Molde sjukehus</option>
+                <option value="Nordlandssykehuset Vesterålen">Nordlandssykehuset Vesterålen</option>
+                <option value="Stord sjukehus">Stord sjukehus</option>
+                <option value="Volda sjukehus">Volda sjukehus</option>
+                <option value="Sykehuset Namsos">Sykehuset Namsos</option>
+                <option value="Finnmarkssykehuset">Finnmarkssykehuset</option>
+                <option value="Helgelandssykehuset">Helgelandssykehuset</option>
+                <option value="Kongsberg sykehus">Kongsberg sykehus</option>
+                <option value="Flekkefjord sykehus">Flekkefjord sykehus</option>
+                <option value="Harstad sykehus">Harstad sykehus</option>
+                <option value="Narvik sykehus">Narvik sykehus</option>
+                <option value="Voss sjukehus">Voss sjukehus</option>
+
+              </select>
+          </div>
         </div>
+
 
         <div class="grid-FormContainer1">
           <div class="form-TextInput">
@@ -174,4 +222,7 @@ function NAS_STAGE_2() {
 }
 
 
-  export default NAS_STAGE_2;
+// export default NAS_STAGE_2;
+export default withAuthenticationRequired(NAS_STAGE_2, {
+  onRedirecting: () => <Loading />,
+});

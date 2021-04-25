@@ -4,6 +4,9 @@ import { Grid, Row, Col } from 'react-flexbox-grid';
 import PeerViewStage1 from "./PeerViewStage1"
 import PeerViewStage2 from "./PeerViewStage2"
 
+import { SolarSystemLoading as Loading } from 'react-loadingg';
+import { useAuth0, withAuthenticationRequired } from "@auth0/auth0-react";
+
 class PeerView extends React.Component {
 
 
@@ -18,9 +21,9 @@ class PeerView extends React.Component {
               <Col xs><PeerViewStage1/></Col>
             </Row>
 
-            {/* <Row>
+            <Row>
               <Col xs><PeerViewStage2/></Col>
-            </Row> */}
+            </Row>
     
         </Grid>
     
@@ -31,4 +34,7 @@ class PeerView extends React.Component {
   )
 };
 }
-export default PeerView;
+// export default PeerView;
+export default withAuthenticationRequired(PeerView, {
+  onRedirecting: () => <Loading />,
+});

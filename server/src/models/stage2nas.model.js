@@ -14,6 +14,10 @@ const postSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
+    HOSPITAL: {
+        type: String,
+        required: true
+    },
     DATE: {
         type: Date,
         required: true

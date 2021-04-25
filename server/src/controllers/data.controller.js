@@ -277,7 +277,22 @@ function result_date_to_daily_patient_nas_collection(result){
 }
 
 
+function get_personnel(result){
+    // handle global (multiple personnel files at the same time)
+    var personnel_count_count = {"Personnel_D":0, "Personnel_A":0, "Personnel_N":0}
+    for (const dataObj of result) {
+        personnel_count_count.Personnel_D += dataObj.Personnel_D//.push({"Personnel_D":dataObj.Personnel_D, "Personnel_A":dataObj.Personnel_A, "Personnel_N":dataObj.Personnel_N})
+        personnel_count_count.Personnel_A += dataObj.Personnel_A
+        personnel_count_count.Personnel_N += dataObj.Personnel_N
+    }
+    // console.log(personnel_count_count)
 
+    // return personnel per shift per 1 day (per hospital or all hospital)
+    var personnel_count_payload = []
+    personnel_count_payload.push({"Personnel_D":personnel_count_count.Personnel_D, "Personnel_A":personnel_count_count.Personnel_A, "Personnel_N":personnel_count_count.Personnel_N})
+
+    return personnel_count_payload
+}
 
 
 // function result_date_to_daily_personnel_count(result){
@@ -302,6 +317,7 @@ function result_date_to_daily_patient_nas_collection(result){
 
 exports.NAS = (req, res, next) => {
     STAGE_1.find({
+        HOSPITAL: (req.params.HOSPITAL=='Global'? { "$exists": true }: req.params.HOSPITAL),
         DATE: {
             "$gte":req.params.DATE1,    //greaterOrEqual
             "$lte":req.params.DATE2}   //lesserOrEqual
@@ -328,10 +344,21 @@ exports.NAS = (req, res, next) => {
 
 
 exports.PatientWeights_on_dates = (req, res, next) => {
+    // console.log(req.params.HOSPITAL)
+
+    // if global include all hospitals
+    // if (req.params.HOSPITAL = 'Global'){
+    //     hospital = '{ $exists: true }'
+    // }
+    // else{
+    //     hospital = req.params.HOSPITAL
+    // }
     STAGE_1.find({
+        HOSPITAL: (req.params.HOSPITAL=='Global'? { "$exists": true }: req.params.HOSPITAL),
         DATE: {
             "$gte":req.params.DATE1,    //greaterOrEqual
-            "$lte":req.params.DATE2}   //lesserOrEqual
+            "$lte":req.params.DATE2     //lesserOrEqual
+        } 
         },
         function(err, result){
         if(err){
@@ -385,7 +412,11 @@ exports.PatientWeights_on_dates = (req, res, next) => {
 
 
 exports.PatientNAS_on_date = (req, res, next) => {
-    STAGE_1.find({DATE: req.params.DATE } , function(err, result){
+    STAGE_1.find({
+        HOSPITAL: (req.params.HOSPITAL=='Global'? { "$exists": true }: req.params.HOSPITAL),
+        DATE: req.params.DATE 
+        },
+        function(err, result){
         if(err){
             res.status(400).send({
                 'success': false,
@@ -409,7 +440,11 @@ exports.PatientNAS_on_date = (req, res, next) => {
 
 
 exports.Personnel_count = (req, res, next) => {
-    STAGE_2.find({DATE: req.params.DATE } , function(err, result){
+    STAGE_2.find({
+        HOSPITAL: (req.params.HOSPITAL=='Global'? { "$exists": true }: req.params.HOSPITAL),
+        DATE: req.params.DATE
+        },
+        function(err, result){
         if(err){
             res.status(400).send({
                 'success': false,
@@ -418,18 +453,10 @@ exports.Personnel_count = (req, res, next) => {
             return; //break if error
         }
 
-        // return personnel per shift per 1 day
-
-        personnel_count_payload = []
-        for (const dataObj of result) {
-            personnel_count_payload.push({"Personnel_D":dataObj.Personnel_D, "Personnel_A":dataObj.Personnel_A, "Personnel_N":dataObj.Personnel_N})
-        }
-        // console.log(personnel_count_payload)
-
 
         res.status(200).send({
             'success': true,
-            'data': personnel_count_payload
+            'data': get_personnel(result)
         });
     });
 
@@ -437,6 +464,153 @@ exports.Personnel_count = (req, res, next) => {
 
 
 exports.ReportPatientPersonnelAvgPerShift = (req, res, next) => {
+
+    // anonymous asyn method to aforce async behavior with multiple synchornious parts.
+ 
+
+    // merge data struct
+    var patient_map = new Map() // Keys are dates, values are avg patient NAS/shift
+    var personnel_map = new Map()
+
+    // sort data structs
+    let patient_date_nas = []
+    let personnel_date_nas = []
+
+    // json payload
+    var personnel_patient_avgnas_payload = []
+
+
+    // code couses synchrounous behavior, we wait for it finish.
+    Promise.all([
+        
+        // TODO: sometimes STAGE_1.find() fires to slow and data is sent before its updated
+        STAGE_1.find({
+            HOSPITAL: (req.params.HOSPITAL=='Global'? { "$exists": true }: req.params.HOSPITAL),
+            DATE: {
+                "$gte":req.params.DATE1,    //greaterOrEqual
+                "$lte":req.params.DATE2}   //lesserOrEqual
+            },
+            function(err, result){
+            if(err){
+                res.status(400).send({
+                    'success': false,
+                    'error': err.message
+                });
+                return; //break if error
+            }
+
+            //get patient avg/day
+            var patient_nas_payload = result_date_to_daily_patient_nas_collection(result)
+
+
+            // get data -> map, merge on date
+            // date objcet is uncomparable, turn them into integers.
+            for (const dataObj of patient_nas_payload) {
+                var date_int = +dataObj.DATE
+                patient_map.set(date_int, ((patient_map.get(date_int)+dataObj.NAS) || dataObj.NAS)  )
+            }
+
+            // push as objects to array
+            patient_map.forEach((value,key) => {
+                patient_date_nas.push({"Pa_NAS":value, "DATE": new Date(key)})
+            });
+
+            // sort data
+            patient_date_nas.sort((a, b) => a.DATE - b.DATE)
+        }),
+
+
+        STAGE_2.find({
+            HOSPITAL: (req.params.HOSPITAL=='Global'? { "$exists": true }: req.params.HOSPITAL),
+            DATE: {
+                "$gte":req.params.DATE1,   //greaterOrEqual
+                "$lte":req.params.DATE2}   //lesserOrEqual
+            },
+            function(err, result){
+            if(err){
+                res.status(400).send({
+                    'success': false,
+                    'error': err.message
+                });
+                return; //break if error
+            }
+
+
+            // this gives an object with dates as keys (we rip a key of from the imutable date object)
+            const groups = result.reduce((groups, data) => {
+                const dateShort = data.DATE.toJSON().split('T')[0];
+                if (!groups[dateShort]) {
+                groups[dateShort] = [];
+                }
+                groups[dateShort].push({"Pe_NAS":((data.Personnel_D + data.Personnel_A + data.Personnel_N)), "DATE": data.DATE});
+                return groups;
+            }, {});
+            // console.log(groups)
+
+
+            for (const [key, value] of Object.entries(groups)) {
+
+                var penas = 0
+                var currentDate = value[0]["DATE"] //  same for these objects
+                for (const dataObj of value){
+                    penas += dataObj["Pe_NAS"]
+                    // console.log(` ${dataObj["Pe_NAS"]}`);
+                }
+                personnel_date_nas.push({"Pe_NAS":(penas*100/3), "DATE": currentDate})
+              }
+
+            //   console.log(personnel_date_nas)
+            
+            // get data -> map, merge on date
+            // for (const dataObj of groups) {
+            //     console.log()
+            //     var pe_nas = 0
+            //     var pe_date = dataObj
+            //     for (const dataLine of dataObj) {
+            //     //personnel_map[dataObj.DATE] = (dataObj.Personnel_D + dataObj.Personnel_A + dataObj.Personnel_N)
+            //     // addsum = (personnel_map.has(dataObj.DATE) ? personnel_map.get(dataObj.DATE): 0)
+            //     personnel_map.set(dataObj.DATE,( dataObj.Personnel_D + dataObj.Personnel_A + dataObj.Personnel_N)) // + addsum)
+            //     }
+            // }
+            
+            // push as objects to array
+            // personnel_map.forEach((value,key) => {
+            //     personnel_date_nas.push({"Pe_NAS":(value*100/3), "DATE": key})
+            // });
+
+            // sort 
+            personnel_date_nas.sort((a, b) => a.DATE - b.DATE)
+        })
+
+
+    ]).then(async function(restest){
+
+        // This gets fired even tought the 2 queries in the Promise.all()
+        // has not been completed. with a short timeout we can acertain that this functions.
+        // This is a quick hack for now, but isn't scalable at all.
+        await new Promise(r => setTimeout(r, 200));
+        
+        // console.log(personnel_date_nas)
+        // console.log('seperator')
+        // console.log(patient_date_nas)
+
+        personnel_patient_avgnas_payload = [patient_date_nas,personnel_date_nas]
+        res.status(200).send({
+            'success': true,
+            'data': personnel_patient_avgnas_payload
+        });
+
+    }).catch(error => {
+        console.error(error.message)
+      });
+
+}
+
+
+
+
+
+exports.NAS_mapData = (req, res, next) => {
 
     // anonymous asyn method to aforce async behavior with multiple synchornious parts.
  
@@ -471,25 +645,32 @@ exports.ReportPatientPersonnelAvgPerShift = (req, res, next) => {
                 return; //break if error
             }
 
-            //get patient avg/day
-            var patient_nas_payload = result_date_to_daily_patient_nas_collection(result)
 
-
-            // get data -> map, merge on date
-            // date objcet is uncomparable, turn them into integers.
-            for (const dataObj of patient_nas_payload) {
-                var date_int = +dataObj.DATE
-                patient_map.set(date_int, ((patient_map.get(date_int)+dataObj.NAS) || dataObj.NAS)  )
+            // hospital from obj
+            // paitent nas from method
+            for (const doc of result) {
+                patientArr = result_date_to_daily_patient_nas_collection([doc])
+                for (const patient of patientArr) {
+                patient_map.set(doc.HOSPITAL, ( (patient_map.get(doc.HOSPITAL)+patient.NAS) || patient.NAS) )
+                }
             }
 
             // push as objects to array
+            // var z = 0
             patient_map.forEach((value,key) => {
-                patient_date_nas.push({"Pa_NAS":value, "DATE": new Date(key)})
+                patient_date_nas.push({"hospital":key, "PAnas": value})
+                // console.log("patient map:   "+key+":"+ patient_date_nas[z++][hospital]+": "+ patient_date_nas[z++][PAnas])
             });
 
             // sort data
-            patient_date_nas.sort((a, b) => a.DATE - b.DATE)
-            console.log("fire 1") 
+            patient_date_nas.sort((a, b) =>  {
+                var aa = a["hospital"].toUpperCase().trim()
+                var bb = b["hospital"].toUpperCase().trim()
+                // console.log(aa + " : " + bb)
+                var sum = (aa > bb)?1:(aa < bb)?-1:0 
+                // console.log(sum)
+                return sum
+            });
         }),
 
 
@@ -507,20 +688,25 @@ exports.ReportPatientPersonnelAvgPerShift = (req, res, next) => {
                 return; //break if error
             }
 
-            // get data -> map, merge on date
-            for (const dataObj of result) {
-                //personnel_map[dataObj.DATE] = (dataObj.Personnel_D + dataObj.Personnel_A + dataObj.Personnel_N)
-                personnel_map.set(dataObj.DATE,(dataObj.Personnel_D + dataObj.Personnel_A + dataObj.Personnel_N))
+            // hospital from obj
+            // paitent nas from method
+            for (const day of result) {
+                personnel_map.set(day.HOSPITAL, (day.Personnel_A + day.Personnel_D + day.Personnel_N  )*100/3 )
             }
-            
+
             // push as objects to array
             personnel_map.forEach((value,key) => {
-                personnel_date_nas.push({"Pe_NAS":(value*100/3), "DATE": key})
+                personnel_date_nas.push({"hospital":key, "PEnas": value})
             });
 
-            // sort 
-            personnel_date_nas.sort((a, b) => a.DATE - b.DATE)
-            console.log("fire 2")
+            personnel_date_nas.sort((a, b) =>  {
+                var aa = a["hospital"].toUpperCase().trim()
+                var bb = b["hospital"].toUpperCase().trim()
+                // console.log(aa + " : " + bb)
+                var sum = (aa > bb)?1:(aa < bb)?-1:0 
+                // console.log(sum)
+                return sum
+            });
         })
 
 
@@ -531,22 +717,57 @@ exports.ReportPatientPersonnelAvgPerShift = (req, res, next) => {
         // This is a quick hack for now, but isn't scalable at all.
         await new Promise(r => setTimeout(r, 200));
         
-        console.log(personnel_date_nas)
-        console.log('seperator')
-        console.log(patient_date_nas)
+        // calculate day count
+        var dayF = new Date(req.params.DATE1)
+        var dayL = new Date(req.params.DATE2)
+        var days = (dayL-dayF) / (1000 * 60 * 60 * 24) +1 //up to and including current date
 
-        personnel_patient_avgnas_payload = [patient_date_nas,personnel_date_nas]
+        // get avg NAS over x days for each hospital
+        var count = 0
+        var arraylength = personnel_date_nas.length
+        while (count < arraylength){
+            personnel_patient_avgnas_payload.push({"hospital":patient_date_nas[count]["hospital"], "NAS": ( patient_date_nas[count]["PAnas"] / personnel_date_nas[count]["PEnas"] )*100/days })
+            // console.log(patient_date_nas[count]["hospital"]+" : "+personnel_date_nas[count]["hospital"])
+            count++
+        }
+
+        // personnel_patient_avgnas_payload = [patient_date_nas,personnel_date_nas]
+        console.log(personnel_patient_avgnas_payload)
+        // console.log(patient_date_nas)
+        // console.log(personnel_date_nas)
+
         res.status(200).send({
             'success': true,
             'data': personnel_patient_avgnas_payload
         });
-        console.log("fire send")
-        console.log(personnel_patient_avgnas_payload)
+
     }).catch(error => {
         console.error(error.message)
       });
 
 }
+
+// AUth0 get user role info in a secure way
+// exports.GetUser = (req, res, next) => {
+
+//     var options = {
+//     method: 'PATCH',
+//     url: 'https://dev-jekvb0py.eu.auth0.com/api/v2/connections/CONNECTION_ID',
+//     headers: {
+//         'content-type': 'application/json',
+//         authorization: 'Bearer MGMT_API_ACCESS_TOKEN',
+//         'cache-control': 'no-cache'
+//     },
+//     data: {options: {set_user_root_attributes: 'ATTRIBUTE_UPDATE_VALUE'}}
+//     };
+
+//     axios.request(options).then(function (response) {
+//     console.log(response.data);
+//     }).catch(function (error) {
+//     console.error(error);
+//     });
+// }
+
 
 //######################################################################
 //############################## NOTES #################################

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import globals from '../globals.js' // << globals.js path
-
-
+import { SolarSystemLoading as Loading } from 'react-loadingg';
+import { useAuth0, withAuthenticationRequired } from "@auth0/auth0-react";
 
 // take nas stage 1 input from nurses once per patient per shift.
 // and save to stage1 collection
@@ -11,6 +11,7 @@ function NAS_STAGE_1() {
     PATIENT_ID: "",
     ROOM_NR: "",
     WORK_SHIFT: "",
+    HOSPITAL: "Akershus universitetssykehus",     // initial form select doesnt trigger onChange()
     TIME_IN: "",//"2012-04-23T18:25:43.511Z",     // for now, add fields with time format conversion later
     TIME_OUT: "",//"2012-04-24T22:25:43.511Z",
     DATE: "",
@@ -253,6 +254,7 @@ function NAS_STAGE_1() {
 
         <div class="form-TextInput">
             <input
+              class="form-TextInput"
               type="date"
               name="DATE"
               value={state.DATE}
@@ -276,6 +278,52 @@ function NAS_STAGE_1() {
         </div>
 
 
+
+
+        <div class="grid-FormContainer1-full" > 
+          <div class="form-TextInput">
+              <select
+              name="HOSPITAL"
+              // value={state.TIME_IN}
+              onChange={handleChange}
+              required
+              >
+                <option value="Akershus universitetssykehus">Akershus universitetssykehus</option>
+                <option value="Oslo universitetssykehus">Oslo universitetssykehus</option>
+                <option value="Haukeland universitetssykehus">Haukeland universitetssykehus</option>
+                <option value="Stavanger universitetssjukehus">Stavanger universitetssjukehus</option>
+                <option value="St. Olavs hospital">St. Olavs hospital</option>
+                <option value="Sykehuset Østfold">Sykehuset Østfold</option>
+                <option value="Sykehuset i Vestfold">Sykehuset i Vestfold</option>
+                <option value="Sykehuset Telemark">Sykehuset Telemark</option>
+                <option value="Bærum sykehus">Bærum sykehus</option>
+                <option value="Drammen sykehus">Drammen sykehus</option>
+                <option value="Universitetssykehuset Nord-Norge">Universitetssykehuset Nord-Norge</option>
+                <option value="Haugesund sjukehus">Haugesund sjukehus</option>
+                <option value="Førde sentralsjukehus">Førde sentralsjukehus</option>
+                <option value="Sykehuset Innlandet">Sykehuset Innlandet</option>
+                <option value="Ålesund sjukehus">Ålesund sjukehus</option>
+                <option value="Sørlandet sykehus">Sørlandet sykehus</option>
+                <option value="Sykehuset Levanger">Sykehuset Levanger</option>
+                <option value="Ringerike sykehus">Ringerike sykehus</option>
+                <option value="Nordlandssykehuset">Nordlandssykehuset</option>
+                <option value="Kristiansund sjukehus">Kristiansund sjukehus</option>
+                <option value="Molde sjukehus">Molde sjukehus</option>
+                <option value="Nordlandssykehuset Vesterålen">Nordlandssykehuset Vesterålen</option>
+                <option value="Stord sjukehus">Stord sjukehus</option>
+                <option value="Volda sjukehus">Volda sjukehus</option>
+                <option value="Sykehuset Namsos">Sykehuset Namsos</option>
+                <option value="Finnmarkssykehuset">Finnmarkssykehuset</option>
+                <option value="Helgelandssykehuset">Helgelandssykehuset</option>
+                <option value="Kongsberg sykehus">Kongsberg sykehus</option>
+                <option value="Flekkefjord sykehus">Flekkefjord sykehus</option>
+                <option value="Harstad sykehus">Harstad sykehus</option>
+                <option value="Narvik sykehus">Narvik sykehus</option>
+                <option value="Voss sjukehus">Voss sjukehus</option>
+
+              </select>
+          </div>
+        </div>
 
 
         <div class="grid-FormContainer2" > 
@@ -307,7 +355,9 @@ function NAS_STAGE_1() {
 
 
         
-        </div>
+
+        
+      </div>
 
 
 
@@ -1197,104 +1247,7 @@ unit or discharge, and sending the body to the morgue.</a>
 }
 
 
-  export default NAS_STAGE_1;
-
-//     // change values while in form
-//     this.onValueChange = this.onValueChange.bind(this);
-//     // submit prop post to API
-//     this.formSubmit = this.formSubmit.bind(this);
-//   }
-
-//   onValueChange(event) {
-//     this.setState({
-//       selectedOption: event.target.value
-//     });
-//   }
-
-//   formSubmit(event) {
-//     event.preventDefault();
-//     console.log(this.state.selectedOption)
-//   }
-
-//   render() {
-//     return (
-//       <form onSubmit={this.formSubmit}>
-//         <div className="radio">
-//           <label>
-//             <input
-//               type="radio"
-//               value="1"
-//               checked={this.state.selectedOption === "1"}
-//               onChange={this.onValueChange}
-//             />
-//             Morning
-//           </label>
-//         </div>
-//         <div className="radio">
-//           <label>
-//             <input
-//               type="radio"
-//               name
-//               value="2"
-//               checked={this.state.selectedOption === "2"}
-//               onChange={this.onValueChange}
-//             />
-//             Female
-//           </label>
-//         </div>
-//         <div className="radio">
-//           <label>
-//             <input
-//               type="radio"
-//               value="Other"
-//               checked={this.state.selectedOption === "Other"}
-//               onChange={this.onValueChange}
-//             />
-//             Other
-//           </label>
-//         </div>
-//         <div>
-//           Selected option is : {this.state.selectedOption}
-//         </div>
-//         <button className="btn btn-default" type="submit">
-//           Submit
-//         </button>
-//       </form>
-//     );
-//   }
-// }
-
-
 // export default NAS_STAGE_1;
-
-// function NAS_STAGE_1() {
-//     const [email, setEmail] = React.useState("");
-//     const [password, setPassword] = React.useState("");
-
-//     return (
-//         <form>
-//             <div className="formRow">
-//             <label htmlFor="email">Email address</label>
-//             <input
-//                 type="email"
-//                 name="email"
-//                 className="email"
-//                 value={email}
-//                 onChange={e => setEmail(e.target.value)}
-//             />
-//             </div>
-//             <div className="formRow">
-//             <label htmlFor="password">Password</label>
-//             <input
-//                 type="password"
-//                 name="password"
-//                 className="password"
-//                 value={password}
-//                 onChange={e => setPassword(e.target.value)}
-//             />
-//             </div>
-//             <button type="submit">Submit</button>
-//         </form>
-//     );
-// }
-// export default NAS_STAGE_1;
+export default withAuthenticationRequired(NAS_STAGE_1, {
+  onRedirecting: () => <Loading />
+});

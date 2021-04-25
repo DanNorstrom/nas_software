@@ -33,6 +33,14 @@ class PeerViewStage1 extends React.Component {
 
   columns = [
     {
+      filter: textFilter(),
+      dataField: 'HOSPITAL',
+      text: 'HOSPITAL',
+      sort: true,
+      headerStyle: () => {
+        return { minWidth: '300px' };}
+      },
+    {
     filter: textFilter(),
     dataField: 'PATIENT_ID',
     text: 'ID',
@@ -711,7 +719,7 @@ class PeerViewStage1 extends React.Component {
 
   render() {
     return (   
-      <div>
+      <div class="PeerView-model">
 
         {/* show current DB contents */}
         <div>
@@ -722,7 +730,7 @@ class PeerViewStage1 extends React.Component {
             columns={ this.columns }
             filter={ filterFactory() }
             pagination={paginationFactory()}
-            striped
+            striped={true}
             bordered={false}
             wrapperClasses="table-responsive"
             filterPosition="top"

@@ -32,6 +32,14 @@ class PeerViewStage2 extends React.Component {
 
   columns = [
     {
+      filter: textFilter(),
+      dataField: 'HOSPITAL',
+      text: 'HOSPITAL',
+      sort: true,
+      headerStyle: () => {
+        return { minWidth: '300px' };}
+      },
+    {
     filter: textFilter(),
     dataField: 'DATE',
     text: 'DATE',

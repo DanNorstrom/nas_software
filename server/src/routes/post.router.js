@@ -73,6 +73,7 @@ postRouter.post("/stage1/", (req, res, next) => {
     WORK_SHIFT: req.body.WORK_SHIFT,
     TIME_IN: req.body.TIME_IN,
     TIME_OUT: req.body.TIME_OUT,
+    HOSPITAL: req.body.HOSPITAL,
     DATE: req.body.DATE,
     BA1A: req.body.BA1A,
     BA1B: req.body.BA1B,
@@ -204,6 +205,7 @@ postRouter.post("/stage2/", (req, res, next) => {
     Personnel_D: req.body.Personnel_D,
     Personnel_A: req.body.Personnel_A,
     Personnel_N: req.body.Personnel_N,
+    HOSPITAL: req.body.HOSPITAL,
     DATE: req.body.DATE
   };
   

@@ -25,6 +25,10 @@ const postSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    HOSPITAL: {
+        type: String,
+        required: true
+    },
     TIME_IN: {
         type: String,
         required: true
