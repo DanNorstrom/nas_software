@@ -131,6 +131,7 @@ postRouter.post("/stage1/", (req, res, next) => {
 postRouter.post("/modifyStage1/", (req, res, next) => {
 
   bulkUpdateOperations = []
+  
 
   for (const dataObj of req.body) {
     bulkUpdateOperations.push({
@@ -144,8 +145,8 @@ postRouter.post("/modifyStage1/", (req, res, next) => {
   STAGE_1.bulkWrite(bulkUpdateOperations, function(err, result) {
   // STAGE_1.findByIdAndUpdate
   // STAGE_1.create( req.body, function(err, result) {
-    console.log(err)
-    console.log(result)
+    // console.log(err)
+    // console.log(result)
     if(err){
       res.status(400).send({
         success: false,

@@ -46,12 +46,15 @@ const dataRouter = require('./src/routes/data.router')
 require('./src/database');
 
 // readable formats
+app.use(express.json({ limit: '50mb' }));
+
 app.use(
-  bodyParser.urlencoded({
+  express.urlencoded({
+    limit: '50mb', // allow bulkwrite in po
     extended: true
   })
 );
-app.use(bodyParser.json());
+
 
 // Static files
 const CLIENT_BUILD_PATH = path.join(__dirname, "../client/build");

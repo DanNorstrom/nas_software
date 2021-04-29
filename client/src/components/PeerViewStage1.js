@@ -26,6 +26,8 @@ class PeerViewStage1 extends React.Component {
       data: []
     }
 
+    this.formSubmit = this.formSubmit.bind(this)
+
     // only push changes to api
     // this.modifiedData = []
     
@@ -697,9 +699,15 @@ class PeerViewStage1 extends React.Component {
       }
     }
 
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json','Access-Control-Allow-Origin' : '*' },
+      body: JSON.stringify(this.state.data) //JSON.stringify(state)
+    };
+
     // connect to ec2 instance / localhost
     get_ip().then((IP) => {
-      fetch('http://'+IP+':8080/posts/modifyStage1/')
+      fetch('http://'+IP+':8080/posts/modifyStage1/', requestOptions)
       .then(response => response.json())
       .then(response => {
         if (response.success){
