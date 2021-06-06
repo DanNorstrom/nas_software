@@ -82,3 +82,5 @@ I recommend using the Docker Desktop software to easily track all built images a
 <b>Description:</b> This is a placeholder component for a hospital landing page.<br> <br>
 <b>Name:</b> Footer.js <br> 
 <b>Description:</b> This is a placeholder footer component for development. It will be replaced with any footer required when deployed at a hospital.<br>
+<br>
+For a detailed code summary, please see the attatched project report.
